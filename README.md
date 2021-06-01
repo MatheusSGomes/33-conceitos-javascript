@@ -1,4 +1,3 @@
-
 # Conceito 1 - Pilha de chamadas
 
 O que é uma **pilha de chamadas**? É uma pilha de todas as funções que estão sendo executadas naquele determinado momento.
@@ -169,4 +168,158 @@ console.log(y) // { valor: 30 }
 Logo, objetos são tipos de referência. Uma variável que recebe um objeto apenas guarda uma referência desse objeto e não o valor do objeto. 
 
 # Conceito 4 -
+
+Coerção é quando o JavaScript tenta converter um tipo de um valor para um tipo esperado. 
+
+Com a coerção só é possível obter 3 tipos de valor: string, number ou boolean.
+
+As principais coerções:
+
+1. `string` - `number` - Converteu a string para number e subtraiu.
+
+````js
+'10' - 5 // 5
+````
+
+2. `string` + `number` - Concatenou os valores
+
+````js
+'10' + 5 // 105
+````
+
+3. `boolean` + `number` - Como true é 1, ele somou 1 + 1 = 2
+
+````js
+true + 1 // 2
+````
+
+4. `boolean` - `number` - Como false é 0, ele somou 0 + 1 = 1
+
+````js
+false + 1 // 1
+````
+
+5. `array` + `object` - Retornou `[object Object]`
+
+````js
+[] + {} // "[object Object]"
+````
+
+6. `array` + `array` - Retornou uma string vazia
+
+````js
+[] + [] // ""
+````
+
+COERÇÃO IMPLÍCITA
+
+Métodos implícitos - Quando não especificamos para para o JavaScript qual valor queremos que ele converta. 
+
+1. +`string` - se a string for um número converte para `number`
+
+````js
++'5' // 5 - number
+````
+
+2. `number` + `string` vazia = número em string
+
+````js
+5 + '' // '5' - número em string
+````
+
+3. `number` e `string` = permanece o segundo valor, independentemente se esse valor for número ou string
+
+````js
+123 && 'oi' // 'oi' - permaneceu o segundo valor
+'oi' && 123 // 123 - permanece o segundo valor independentemente do tipo
+````
+
+4. `null` ou `boolean` - permanece o segundo valor
+
+````js
+null || true // true - permanece o que for verdadeiro
+````
+
+
+
+COERÇÃO EXPLICITA
+
+Métodos explícitos - Quando afirmamos que queremos converter um valor em outro tipo de valor. 
+
+É uma forma mais legível porque sabemos que aquele valor está sendo convertido para um construtor que está sendo usado. 
+
+````js
+Number('50') // 50
+String(50) // '50'
+
+Boolean('50') // true
+Boolean('') // string vazia = false
+Boolean(50) // true
+Boolean(0) // false
+Boolean(-10) // número negativo = true
+````
+
+O JavaScript é Duck type - *Se anda como pato e fala como pato, só pode ser um pato* - Isso quer dizer que o JS não vai buscar  validar os tipo que estão sendo usados. 
+
+JavaScript é fracamente tipada. Não precisamos especificar os tipos.
+
+Já o TypeScript é um super conjunto tipado do JavaScript que compila para JavaScript puro. 
+
+Exemplo:
+
+````typescript
+let x: number = 1 // ou seja, x é do tipo number
+
+x = '1' // erro
+````
+
+Caso tente passar outro valor diferente de `number` para `x` ele apresenta um erro. 
+
+Na tipagem estática, é necessário declarar quais dados poderão ser associados a cada variável antes de sua utilização.
+
+Já na tipagem dinâmica não exigem declarações de tipos de dados. Nesse caso, a linguagem é capaz de alterar o tipo durante a compilação ou execução do programa.
+
+Quando a tipagem é forte a linguagem não permite um mesmo dado ser tratado como se fosse de outro tipo.
+
+Já a tipagem fraca é quando conseguimos criar essas coerções implícitas. 
+
+O ideal é não deixar o próprio JS fazer essas coerções. 
+
+# Conceito 5 - Comparação de valores e tipos 
+
+Muita gente não sabe a diferença entre `==` e `===`.
+
+Com `==`, ele checa se os tipos são iguais. 
+
+````js
+5 == '5' // true
+5 == 5 // true
+````
+
+Se não são iguais ele converte um dos tipos e checa novamente. 
+
+O que acontece por trás do capô é que ele primeiro usa o sinal triplo para saber se são iguais em tipo e valor. 
+
+Se não forem iguais, então ele verifica se estamos comparando `null` com `undefined`. Se for ele retorna true.
+
+Se não for esse caso então ele verifica se estamos comparando número com `string`, se for ele converte a `string ` em número, depois volta para o começo do processo. 
+
+Repetindo tudo novamente ele verifica se estamos comparando `boolean` com `number` se for ele converte o `boolean` em número 0 ou 1. 
+
+Depois compara se for `boolean` com `string`, se for converte a `string` para `boolean`.
+
+Se não for nenhum acima, ele verifica se é um `objeto` ou tipo primitivo. Se for ele converte o `objeto` para uma `string` e repete o primeiro passo novamente. 
+
+"por baixo dos panos", ele usa o comparador triplo para fazer tudo isso. 
+
+````js
+5 === '5' // false
+5 === 5 // true
+````
+
+A dica é evitar usar o operador `==` e usar apenas `===` por causa da coerção. 
+
+O operador triplo `===` compara valor e tipo. Sendo assim, para retornar `true` é necessário que os tipos das variáveis sejam o mesmo e o valor também. Não passa por coerção. 
+
+A dica do autor é que usemos o `typeof` para fazer validações. 
 
