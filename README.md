@@ -211,7 +211,7 @@ false + 1 // 1
 [] + [] // ""
 ````
 
-COERÇÃO IMPLÍCITA
+### Coerção Implícita
 
 Métodos implícitos - Quando não especificamos para para o JavaScript qual valor queremos que ele converta. 
 
@@ -240,9 +240,7 @@ Métodos implícitos - Quando não especificamos para para o JavaScript qual val
 null || true // true - permanece o que for verdadeiro
 ````
 
-
-
-COERÇÃO EXPLICITA
+### Coerção Explicita
 
 Métodos explícitos - Quando afirmamos que queremos converter um valor em outro tipo de valor. 
 
@@ -322,4 +320,111 @@ A dica é evitar usar o operador `==` e usar apenas `===` por causa da coerção
 O operador triplo `===` compara valor e tipo. Sendo assim, para retornar `true` é necessário que os tipos das variáveis sejam o mesmo e o valor também. Não passa por coerção. 
 
 A dica do autor é que usemos o `typeof` para fazer validações. 
+
+# Conceito 6 - Escopo global, de função, do bloco e léxico
+
+Escopo é a acessibilidade das variáveis, funções e objetos em uma parte do código enquanto ele está sendo executado. 
+
+No JS temos 3 tipos de variáveis: `var`, `let` e `const`.
+
+`var` respeita o escopo da função, porém fora de uma função ele pertence ao escopo global.
+
+````js
+var nome = 'José'
+
+console.log(nome) // "José"
+
+function funcao(){
+  var sobrenome = 'da Silva'
+}
+
+console.log(sobrenome) // sobrenome is not defined
+
+if (nome === 'José') {
+  var idade = 20
+}
+
+console.log(idade) // 20
+````
+
+Já `let` e `const` respeitam o escopo de bloco, ou seja, só estão disponíveis entre um abrir e fechar de chaves `{...}`.
+
+````js
+var nome = 'José'
+
+if (nome === 'José') {
+  const idade = 20
+}
+
+console.log(idade) // idade is not defined
+````
+
+O **escopo léxico** significa que quando temos funções aninhadas, ou seja, funções dentro de funções, as variáveis das funções pai estão disponíveis nas funções filho. 
+
+````js
+function pai() {
+  var nome = 'José'
+  
+  function filho() {
+    nome = 'Maria'
+  }
+}
+````
+
+Esse tipo de situação é possível porque a função `filho` tem acesso a tudo o que foi declarado na função pai. 
+
+Não é possível acessar uma variável de filho para pai.
+
+````js
+function pai() {
+  
+  function filho() {
+    var nome = 'José'
+  }
+  
+  console.log(nome) // nome is not defined
+  
+}
+````
+
+O `escopo de função` funciona da mesma forma. O que é criado dentro da função não está disponível fora dela. Mas o que é criado fora da função fica disponível para ser usado dentro dela.
+
+O `escopo global` que quando declaramos algo que ficara disponível para todo o código, se no navegador é o objeto `window`, ou seja, a janela do navegador. Já no NodeJS existe o objeto `global`.
+
+Ao alterar uma variável global ela é alterada para a aplicação toda. 
+
+````js
+var nome = 'João'
+
+function exibirNome() {
+  console.log(nome) // 'João'
+}
+````
+
+Variável `let` declarada dentro de um bloco não fica disponível fora do bloco.
+
+````js
+function bloco() {
+  if(true) {
+    let teste2 = 'teste 2'
+  }
+  console.log(teste2) // teste2 is not defined
+}
+````
+
+`var` declarada fora do bloco fica disponível dentro do bloco, é possível até mesmo manipula-lá. 
+
+````js
+function bloco() {
+  var teste
+  if(true) {
+    teste = 'teste bloco'
+  }
+  console.log(teste) // "teste bloco"
+}
+
+bloco()
+````
+
+# Conceito 7 - Expressão e Declaração
 
