@@ -428,3 +428,36 @@ bloco()
 
 # Conceito 7 - Expressão e Declaração
 
+Existe uma diferença entre os dois. Uma expressão pode se comportar como declaração mas uma declaração não pode se comportar como expressão.
+
+Expressão é todo o pedaço de código que retorna um valor único. 
+
+Uma expressão não muda o estado de algo.
+
+````js
+console.log(1 + 1) // 2
+console.log(Math.random()) // 0.3190358326370617
+````
+
+Declarações são pedaços de código que fazem algo, retornam uma ação. 
+
+````js
+function soma(a, b) {
+  return a + b
+}
+
+soma(1, 3) // 4
+````
+
+Tudo o que for uma ação é considerado uma declaração. Logo, não posso passar uma declaração como um valor em uma declaração. Mas posso passar uma expressão dentro.
+
+````js
+function soma(a, b) {
+  return a + b
+}
+
+soma(1, Math.random()) // 1.058350169276787
+````
+
+Onde é esperado uma expressão, o JS não aceita uma declaração.
+
