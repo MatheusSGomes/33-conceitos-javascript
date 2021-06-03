@@ -461,3 +461,95 @@ soma(1, Math.random()) // 1.058350169276787
 
 Onde é esperado uma expressão, o JS não aceita uma declaração.
 
+# Conceito 8 - IIFE e Namespaces
+
+iife (immediately invoked function expression) - São expressões de funções imediatamente invocadas. 
+
+Como se cria uma função em JavaScript:
+
+````js
+function alerta() {
+  alert('Olá mundo!')
+}
+
+alerta()
+````
+
+É possível atribuir uma função anônima a uma variável.
+
+````js
+const alerta = function() {
+  alert('Olá mundo!')
+}
+
+alerta()
+````
+
+A IIFE funciona da seguinte forma, ela recebe uma exclamação na frente, e no final abre e fecha de parentesis `()`.
+
+````js
+!function(){
+  alert('Olá mundo!')
+}()
+````
+
+**OBS:** No final ela é invocada.
+
+**OBS:** Ao encontrar a palavra-chave `function`, o JS espera que seja definida uma função, ou seja, que ela receba um nome. A exclamação `!` diz para o JS tratar o que vem a seguir como uma expressão. 
+
+Essa função é executada apenas 1x, só será executada novamente se o código for executado novamente.
+
+Resumindo, uma IIFE é uma função executada automaticamente assim que é lida.
+
+Outra forma de escrever uma IIFE:
+
+````js
+(function(){
+  alert('Olá mundo!')
+}())
+````
+
+OBS: Mesmo que tenha um nome, ela roda assim que lida porque a exclamação na frente diz que ela é uma expressão.
+
+````js
+!function alerta() {
+  alert('Olá mundo!')
+}()
+````
+
+Um exemplo prático para uso da IF é quando buscamos um valor no banco de dados assim que inicializa a aplicação.
+
+---
+
+Namespace é um pedaço de código que serve para organizar o código em pequenos grupos.
+
+Ao invés de deixar tudo solto, o que pode fazer com que uma variável colida com outra.
+
+Um exemplo comum é quando uma biblioteca tem uma função com um determinado nome, e crio função com o mesmo nome da função da biblioteca o que acaba ou quebrando o meu código ou o código da biblioteca.
+
+Para evitar esse tipo de problema usamos essa estratégia de namespace.
+
+Dessa forma, os métodos não fazem parte do escopo global e sim do namespace de dados.
+
+Nesse exemplo abaixo, a variável contador fica restrita ao bloco, e não no objeto global, caso em uma biblioteca exista outra variável contador, ela não será retribuída.
+
+Assim como o método incrementar, ele fica privado não colidindo com o possíveis métodos de uma biblioteca:
+
+````js
+const dados = (function(){
+  let contador = 0
+  return {
+    incrementar() {
+      contador += 1
+      return contador
+    }
+  }
+}())
+
+console.log(dados.contador) // undefined
+console.log(dados.incrementar()) // 1
+console.log(dados.incrementar()) // 2
+console.log(dados.incrementar()) // 3
+````
+
+Ou seja, a variável contador fica privada. 
