@@ -553,3 +553,114 @@ console.log(dados.incrementar()) // 3
 ````
 
 Ou seja, a variável contador fica privada. 
+
+# Conceito 9 - Módulos
+
+Módulos são pedaços de código encapsulados que podem ser importados e expõe alguns métodos para serem utilizados.
+
+Por exemplo:
+
+Temos aqui algumas constantes:
+
+````js
+const value = 5;
+
+const alertHelloWorld = function() {
+  alert('Hello World!')
+}
+
+const multiply = function(x) {
+  return x * value
+}
+````
+
+Para exporta-las de modo que outro arquivo tenha acesso a elas, usamos a palavra chave `export` e então, é possível através de um objeto, um array ou apenas uma variável. 
+
+Exportando como array:
+
+````js
+export default [ alertHelloWorld, mutilply ]
+````
+
+Exportando como objeto:
+
+````js
+export { alertHelloWorld, mutilply }
+````
+
+Exportando variável ou função separada:
+
+````js
+export default alertHelloWorld
+````
+
+A palavra-chave `default` quer dizer que aquela será a exportação padrão daquele documento. 
+
+Observe que ao exportar um objeto, não usamos a palavra `default` isso acontece porque é exportado mais de um objeto ao mesmo tempo. 
+
+Já ao exportar um array, usamos `default` porque é apenas 1 elemento com vários índices sendo exportado. 
+
+É possível exportar mais de uma variável, porém apenas uma pode ser `default`.
+
+Para acessar um array exportado em outro documento:
+
+````js
+import utilidades from './utilities.js'
+
+console.log(utilidades) // retorna um array com as 2 variáveis exportadas
+
+// para acessar as funções exportadas:
+console.log(utilidades[0])
+console.log(utilidades[1])
+
+// para executar as funções exportadas:
+console.log(utilidades[0]()) // executa o alerta 'hello world'
+console.log(utilidades[1](5)) // faz a multiplicação, observe como o argumento é passado
+````
+
+Para acessar um objeto exportado de outro documento:
+
+````js
+import { alertHelloWorld, mutilply } from './utilities.js'
+
+console.log(alertHelloWorld()) // aqui executa o método
+console.log(mutilply(5)) // retorna 25 - passamos o argumento para outra função.
+````
+
+Outra forma de importar um objeto é usando o `*`. Em programação o asterisco significa "tudo". Então, podemos dizer para ele importar "tudo"... como ... "utilitários". Dessa forma, através de `utilitarios` podemos ter acesso a todos os métodos e propriedades exportados do outro documento.
+
+````js
+import * as utilitarios from './utilities.js'
+
+console.log(utilitarios.mutilply(5)) // 25
+utilitarios.alertHelloWorld() // exibe alerta
+````
+
+Para importar quando é uma única função:
+
+````js
+import alertHelloWorld from './utilities.js'
+
+alertHelloWorld() // exibe o alerta
+````
+
+Uma observação interessante ao importar um método ou propriedade separado é que podemos dar qualquer nome, não necessariamente precisa ser o mesmo que o nome de exportação padrão.
+
+````js
+import helloWorld from './utilities.js'
+
+helloWorld() // exibe o alerta
+````
+
+---
+
+`Object Shorthand`, é quando vamos passar uma propriedade que tem o mesmo valor do nome que estou passando. É possível colocar apenas o valor da propriedade.
+
+````js
+export { valor: valor }
+````
+
+````js
+export { valor }
+````
+
