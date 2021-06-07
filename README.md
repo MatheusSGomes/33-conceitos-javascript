@@ -596,7 +596,7 @@ export default alertHelloWorld
 
 A palavra-chave `default` quer dizer que aquela será a exportação padrão daquele documento. 
 
-Observe que ao exportar um objeto, não usamos a palavra `default` isso acontece porque é exportado mais de um objeto ao mesmo tempo. 
+Observe que ao exportar um objeto, não usamos a palavra `default` isso acontece porque é exportado mais de um objeto ao mesmo tempo e quando for importado, ele poderá ser desestruturado. 
 
 Já ao exportar um array, usamos `default` porque é apenas 1 elemento com vários índices sendo exportado. 
 
@@ -663,4 +663,92 @@ export { valor: valor }
 ````js
 export { valor }
 ````
+
+# Conceito 10 - Fila de eventos e Pilha de Eventos
+
+O JavaScript é uma linguagem de programação assíncrona e single thread.
+
+Single thread - Processa uma requisição por vez. Tudo sequencialmente.
+
+Assíncrona - Feito com `call backs` e `promisses` - Enquanto essas chamadas não retornam ele fica livre para fazer outra coisa no mesmo nível da camada. 
+
+Uma pergunta que surge, é se o JS é single thread, como ele consegue executar algo enquanto outra chamada não foi finalizada? 
+
+Ou seja, se ele é single thread, como ele consegue ser assíncrono?
+
+Ele consegue isso através do `event loop`. Para entender o `Event Loop` é necessário entender antes a fila de mensagens.
+
+Os browsers tem as suas Web APIs, como é o caso do DOM, Ajax, setTimeout os Event Listeners...
+
+Quando essas APIs são executadas, o JS executa a chamada, mas  callback é colocado em um local separado, um local chamado `Message Queue` ou `Event Queue`, que é a fila de mensagens, uma fila de eventos.
+
+Quando a `Call Stack` está limpa, ou seja, nada mais para executar, o `Event Loop` entra em ação. Ele sempre fica rodando vendo o que está na fila de execução a `Event Queue`. Como é uma fila, o primeiro que entra é o primeiro que sai. Logo, ele pega o `Call back` e coloca novamente para ser executado. 
+
+Um exemplo, um `setTimeout`. 
+
+O `setTimeout` entra na `Call Stack`, ou seja, ele é executado na hora. Porém, o seu callback é colocado no `Event Queue`, na fila de eventos. 
+
+Código todo:
+
+````js
+setTimeout(() => {
+  console.log('teste')
+}, 0)
+````
+
+Primeiro executa a chamada:
+
+````js
+setTimeout()
+````
+
+Depois ele coloca o callback, que é o que está dentro do `setTimeout` no `event queue` que é a fila de eventos, também chamada de fila de mensagens, só depois que a `Call Stack` estiver limpa que ele executa o `callback` que é o que estava dentro do `setTimeout`:
+
+`````js
+() => {
+  console.log('teste')
+}, 0
+`````
+
+---
+
+Existem códigos que bloqueiam a execução. Exemplo: `for` que demora 5 segundos para acontecer. Enquanto ele está rodando, nada mais acontece porque a thread é bloqueada. 
+
+Porém, temos eventos assíncronos, como vistos anteriormente. Eles são executados mas os seus `callbacks` são colocados em uma fila de mensagens, que espera a `Call Stack` estar limpa para ser executada.
+
+Nesse exemplo abaixo, teremos um `for` e um `setTimeout`. O `for` bloqueia a execução, ou seja, ao entrar no bloco ele só deixa executar a linha de baixo após ele ter finalizado. 
+
+Diferente do `setTimeout` que é assíncrono, ou seja, o seu callback é colocado na fila de mensagens, e só depois que toda a `Call Stack` estiver limpa que ele é executado.
+
+````js
+console.log('A') // colocado na Call Stack
+
+for(let i = 1; i <= 3; i++) {
+  console.log('B - ' + i) // colocado na Call Stack
+}
+
+console.log('C') // colocado na Call Stack
+
+setTimeout(() => {
+  console.log('D') // colocado na Event Queue
+}, 0)
+
+console.log('E') // colocado na Call Stack
+
+// "A"
+// "B - 1"
+// "B - 2"
+// "B - 3"
+// "C"
+// "E"
+// "D"
+````
+
+Observe que na execução, o `D` é executado por último. Isso acontece porque todo o código é colocado na `Call Stack`, ou seja, é executado imediatamente, mas como o `D` é colocado em um `callback`, ele é executado só após a `Call Stack` estar limpa. 
+
+Quando a `Call Stack` fica limpa, o `Event Loop` verifica na fila de mensagens, ou seja a `Event Queue` para ver se tem algo para executar, ele vê que ainda tem um `console.log('D')` e então executa. 
+
+Por isso que tudo o que é colocado no `Event Queue`, ou seja, na fila de mensagens, sempre é executado por último. 
+
+Dessa forma o JS consegue trabalhar de forma assíncrona e single thread.
 
