@@ -752,3 +752,123 @@ Por isso que tudo o que é colocado no `Event Queue`, ou seja, na fila de mensag
 
 Dessa forma o JS consegue trabalhar de forma assíncrona e single thread.
 
+# Conceito 11 - setTimeout, setInterval, requestAnimationFrame
+
+`setTimeout` - Usado para executar um código apenas uma vez, após determinado tempo.
+
+Ele recebe 2 parâmetros. O primeiro é uma função `callback`, e o segundo é o tempo em mili`ssegundos. 
+
+````js
+setTimeout(() => {
+  alert('Olá mundo!')
+}, 1000)
+````
+
+É possível colocar essa função `callback` de forma externa:
+
+````js
+const alerta = () => {
+  alert('Olá mundo!')
+}
+
+setTimeout(alerta, 1000)
+````
+
+A dica aqui é que é possível passar parâmetros para dentro do `setTimeout`.
+
+Porém, para passar esses parâmetros, passamos após o parâmetro de tempo.
+
+````js
+const darOi = (nome) => {
+  alert('Oi ' +  nome)
+}
+
+setTimeout(darOi, 2000, 'João')
+````
+
+É possível dessa forma passar vários parâmetros.
+
+É possível cancelar um `setTimeout`. Colocamos dentro de uma variável, e então limpamos a variável através do `clearTimeout`.
+
+````js
+const darOi = (nome) => {
+  alert('Oi ' +  nome)
+}
+
+const timeOut = setTimeout(darOi, 3000, 'João')
+
+setTimeout(() => {
+  clearTimeout(timeOut)
+}, 1500)
+````
+
+Nesse exemplo, o timeOut é ativado para dar o aleta após 3 segundos, porém uma outra função usando o `clearTimeout` limpa o tempo aos 1.5 segundos.
+
+---
+
+`setInterval` - continua executando o código a partir do tempo passado. 
+
+**OBS:** A execução não é imediata.
+
+````js
+setInterval(() => {
+  console.log('Oi')
+}, 1000)
+````
+
+É possível limpar a execução do `setInterval`, após um determinado tempo. Nesse exemplo, vamos limpar após 5 segundos, e o método que faz isso é o `clearInterval`.
+
+````js
+const intervalo = setInterval(() => {
+  console.log('Oi')
+}, 1000)
+
+setTimeout(() => {
+  clearInterval(intervalo)
+}, 5000)
+````
+
+**OBS:** Como a execução não é imediata, o código é executado 4 vezes. 
+
+---
+
+O `setTimeout` e o `setInterval`, são muito usados por desenvolvedores front-end para criar animações. Porém, não é o ideal para fazer alguns tipos de animações.
+
+Algumas animações, para que fiquem suaves, desenvolvedores usam 60 quadros por segundo. 
+
+Porém, para fazer 60 quadros por segundo usando o `setInterval` não é performático, consome muita CPU. 
+
+Existe um método chamado `requestAnimationFrame()`. Basicamente, ele executa o método toda vez que o browser está apto a fazer o repaint (repintura) da tela. 
+
+`repaint` é a renderização da DOM. Quando ela for acontecer, o método é acionado novamente. 
+
+[Leia sobre o requestAnimationFrame no site da Mozila](https://developer.mozilla.org/pt-BR/docs/Web/API/Window/requestAnimationFrame)
+
+````js
+let contador = 0
+
+function animacao() {
+  contador += 1;
+  console.log(contador)
+  loop = requestAnimationFrame(animacao)
+}
+
+var loop = requestAnimationFrame(animacao)
+
+setTimeout(() => {
+  cancelAnimationFrame(loop)
+}, 4000)
+````
+
+**OBSERVAÇÕES**: Dentro da função `animacao` passamos novamente `loop = requestAnimationFrame(animacao)` pois ele é executado recursivamente, ou seja, o próprio método se chama novamente. 
+
+Sempre que acontecer o `repaint`, ele vai executar `animacao`. 
+
+Também observe que ele executa todos os `repaints`.
+
+Através de um `setTimeout` configurado para 4 segundos, cancelamos a animação. 
+
+Ele também tem o seu método para cancelar, é o `cancelAnimationFrame`, nele passamos a variável onde o `requestAnimationFrame` foi colocado.
+
+
+
