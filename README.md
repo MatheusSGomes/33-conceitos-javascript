@@ -870,5 +870,75 @@ Através de um `setTimeout` configurado para 4 segundos, cancelamos a animação
 
 Ele também tem o seu método para cancelar, é o `cancelAnimationFrame`, nele passamos a variável onde o `requestAnimationFrame` foi colocado.
 
+# Conceito 12 - Operadores Bitwise
+
+Tudo para um computador são 0 e 1. Ele usa dígitos binários. O computador codifica os dígitos. Mapeia as combinações de dígitos para caracteres correspondentes. 
+
+Existe uma forma de descobrir a representação binária de um número no JavaScript:
+
+````js
+Number(77).toString(2) // "1001101"
+````
+
+Passamos a base `2` que é a usada para converter números em binários.
+
+Não dá para usar binário diretamente no JavaScript, para usar é necessário usar a função `parseInt()`, essa função recebe 2 argumentos o primeiro é o binário e o segundo é a base do binário.
+
+````js
+parseInt('1001101', 2) // 77
+````
+
+`Operadores Bitwise` - São parecidos com operadores lógicos, eles trabalham em cada bit dos caracteres que vamos comparar.
+
+Por exemplo: 
+
+Operador lógico de 'ou' - `||`
+
+Operador 'ou' bitwise - `|`
+
+Ao usar o operador bitwise 'ou', ele chega cada um dos bits da esquerda para a direita e se em alguma posição for 1, ele retorna 1 automaticamente para aquela posição. 
+
+````js
+parseInt('0000001', 2) // 1
+parseInt('0000010', 2) // 2
+````
+
+Usando o `|` 'ou' ele vai comparar:
+
+````js
+// 0000001 = 1
+// 0000010 = 2
+// 0000011 = Resposta do ou = 3
+````
+
+Logo:
+
+````js
+console.log(1 | 2) // 3
+console.log(parseInt(11, 2)) // 3
+````
+
+Observe que 3 em binário é `0000011`. Porém, usando o `parseInt` não é necessário colocar todos os 0 antes do primeiro 1, ou seja, todos os 0 antes do 1 podem ser ignorados. 
+
+Com o operador `&` em bitwise ele retorna 1 onde em binário a comparação der 1. 
+
+````js
+// 0000010 = 2
+// 0000011 = 3
+
+// 0000010 = Resposta = 2
+````
+
+````js
+parseInt('0000010', 2) // 2
+parseInt('0000011', 2) // 3
+
+console.log(2 & 3) // 2
+````
+
+---
+
+Esse não é um conceito muito usado na prática mas é importante aprender a manipular os bits em JS caso encontre algum código fazendo esse tipo de manipulação.
+
 
 
