@@ -940,5 +940,56 @@ console.log(2 & 3) // 2
 
 Esse não é um conceito muito usado na prática mas é importante aprender a manipular os bits em JS caso encontre algum código fazendo esse tipo de manipulação.
 
+# Conceito 13 - Factorie
 
+## Factories
 
+Uma `Factorie`, é uma função que retorna um objeto. 
+
+Lembrando que no JS qualquer função pode retornar um objeto e quando ela retorna sem usar a palavra-chave `new` então ela é uma `factorie`.
+
+````js
+const Mamifero = function(nome, som) {
+  return {
+    nome,
+    som
+  }
+}
+````
+
+Então, se a necessidade de `new`, podemos criar novos objetos:
+
+````js
+const cachorro = Mamifero('Cachorro', 'Au au')
+const gato = Mamifero('Gato', 'Miau')
+
+console.log(cachorro)
+// [object Object] {
+//  nome: "Cachorro",
+//  som: "Au au"
+// }
+
+console.log(gato)
+// [object Object] {
+//  nome: "Gato",
+//  som: "Miau"
+// }
+````
+
+Uma curiosidade, é que podemos ainda sim criar o objeto com `new`:
+
+````js
+const cachorro = new Mamifero('Cachorro', 'Au au')
+console.log(cachorro)
+
+// [object Object] {
+//  nome: "Cachorro",
+//  som: "Au au"
+// }
+````
+
+Outros pontos importantes, é em relação ao `this`. Ajuda a não confundir quando for usar. E também em relação a herança.
+
+São pontos que costumam confundir quando se trata de classes. 
+
+## Classes
