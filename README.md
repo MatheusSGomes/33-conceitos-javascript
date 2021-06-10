@@ -993,3 +993,102 @@ Outros pontos importantes, é em relação ao `this`. Ajuda a não confundir qua
 São pontos que costumam confundir quando se trata de classes. 
 
 ## Classes
+
+Antes do ES6 para se usar classes no JS era necessário usar funções construtoras.
+
+Apesar de a partir do ES6, termos uma sintaxe para trabalhar com classes, o que acontece por trás ainda é uma `syntactic sugar` do que acontecia nas funções construtoras.
+
+A vantagem é que ainda sim, fica muito mais fácil de ser lido.
+
+````javascript
+class Automovel {
+  constructor(marca, modelo, ano) {
+    this.marca = marca
+    this.modelo = modelo
+    this.ano = ano
+  }
+  descricao() {
+    console.log('Este carro é um ' + this.modelo + ' da marca ' + this.marca + ' ano ' + this.ano)
+  }
+}
+
+const mustang = new Automovel('Ford', 'Mustang', 1967)
+
+console.log(mustang) 
+// {
+//  ano: 1967,
+//  marca: "Ford",
+//  modelo: "Mustang"
+// }
+
+console.log(mustang.descricao()) 
+// "Este carro é um Mustang da marca Ford ano 1967"
+````
+
+Aqui temos um construtor de classe. Por convenção, a primeira letra é maiúscula. 
+
+Dentro temos o método `constructor`, que é por onde passamos os dados para a construção do objeto. 
+
+Quando colocamos `this.modelo`, estamos criando uma variável dentro do contexto da classe chamada `modelo`.
+
+Uma outra forma de criar classes é colocando ela em uma variável:
+
+````js
+const Automovel = class {}
+````
+
+Lembrando que uma classe é um objeto. Se não é tipo primitivo, é objeto. 
+
+---
+
+A herança é quando conseguimos receber métodos ou propriedades de uma classe que está acima.
+
+Para trabalhar com herança entre classes, podemos usar a palavra `extends` e então passamos o nome da classe.
+
+Ao estender uma classe também temos o método `super()`. É um método colocado dentro do construtor da classe estendida para chamar tudo o que foi declarado no construtor da classe pai.
+
+````js
+class Rodas {
+  constructor(rodas) {
+    this.rodas = rodas
+  }
+  quantidadeRodas() {
+    return 'Este automóvel tem ' + this.rodas
+  }
+}
+
+class Automovel extends Rodas {
+  constructor(marca, modelo, ano, rodas) {
+    super(rodas)
+    this.marca = marca
+    this.modelo = modelo
+    this.ano = ano
+  }
+  descricao() {
+    return 'Este carro é um ' + this.modelo + ' da marca ' + this.marca + ' ano ' + this.ano
+  }
+}
+
+const mustang = new Automovel('Ford', 'Mustang', 1967, 4)
+
+console.log(mustang)
+// {
+//  ano: 1967,
+//  marca: "Ford",
+//  modelo: "Mustang",
+//  rodas: 4
+// }
+
+console.log(mustang.descricao())
+// "Este carro é um Mustang da marca Ford ano 1967"
+
+console.log(mustang.quantidadeRodas(4))
+// "Este automóvel tem 4"
+````
+
+Outra forma de declarar a extensão da classe:
+
+````js
+const Automovel = class extends Rodas {}
+````
+
