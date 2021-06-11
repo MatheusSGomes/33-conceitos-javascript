@@ -1002,27 +1002,41 @@ A vantagem é que ainda sim, fica muito mais fácil de ser lido.
 
 ````javascript
 class Automovel {
-  constructor(marca, modelo, ano) {
+  constructor(marca, modelo, veiculo) {
     this.marca = marca
     this.modelo = modelo
-    this.ano = ano
+    this.veiculo = veiculo
   }
-  descricao() {
-    console.log('Este carro é um ' + this.modelo + ' da marca ' + this.marca + ' ano ' + this.ano)
+  descricaoAuto() {
+    return 'Este é um ' + this.veiculo + ' da marca ' + this.marca + ' modelo ' + this.modelo
   }
 }
 
-const mustang = new Automovel('Ford', 'Mustang', 1967)
+class Moto extends Automovel {
+  constructor(marca, modelo, veiculo, rodas) {
+    super(marca, modelo, veiculo)
+    this.rodas = rodas
+  }
+  descricaoMoto() {
+    return 'Esta é uma ' + this.veiculo + ' modelo ' + this.modelo + ' marca ' + this.marca + ' com ' + this.rodas + ' rodas'
+  }
+}
 
-console.log(mustang) 
-// {
-//  ano: 1967,
-//  marca: "Ford",
-//  modelo: "Mustang"
+const mustang = new Automovel('Ford', 'Mustang', 'Carro')
+console.log(mustang.descricaoAuto())
+// "Este é um Carro da marca Ford modelo Mustang"
+
+const bonneville = new Moto('Triumph', 'Bonneville', 'Moto', 2)
+console.log(bonneville)
+// [object Object] {
+//  marca: "Triumph",
+//  modelo: "Bonneville",
+//  rodas: 2,
+//  veiculo: "Moto"
 // }
 
-console.log(mustang.descricao()) 
-// "Este carro é um Mustang da marca Ford ano 1967"
+console.log(bonneville.descricaoMoto())
+// "Esta é uma Moto modelo Bonneville marca Triumph com 2 rodas"
 ````
 
 Aqui temos um construtor de classe. Por convenção, a primeira letra é maiúscula. 
@@ -1047,48 +1061,150 @@ Para trabalhar com herança entre classes, podemos usar a palavra `extends` e en
 
 Ao estender uma classe também temos o método `super()`. É um método colocado dentro do construtor da classe estendida para chamar tudo o que foi declarado no construtor da classe pai.
 
-````js
-class Rodas {
-  constructor(rodas) {
-    this.rodas = rodas
-  }
-  quantidadeRodas() {
-    return 'Este automóvel tem ' + this.rodas
-  }
-}
-
-class Automovel extends Rodas {
-  constructor(marca, modelo, ano, rodas) {
-    super(rodas)
-    this.marca = marca
-    this.modelo = modelo
-    this.ano = ano
-  }
-  descricao() {
-    return 'Este carro é um ' + this.modelo + ' da marca ' + this.marca + ' ano ' + this.ano
-  }
-}
-
-const mustang = new Automovel('Ford', 'Mustang', 1967, 4)
-
-console.log(mustang)
-// {
-//  ano: 1967,
-//  marca: "Ford",
-//  modelo: "Mustang",
-//  rodas: 4
-// }
-
-console.log(mustang.descricao())
-// "Este carro é um Mustang da marca Ford ano 1967"
-
-console.log(mustang.quantidadeRodas(4))
-// "Este automóvel tem 4"
-````
-
 Outra forma de declarar a extensão da classe:
 
 ````js
-const Automovel = class extends Rodas {}
+const Moto = class extends Automovel {}
 ````
+
+# Conceito 14 - this, call, apply e bind
+
+`this` referencia o atual contexto onde ele está sendo utilizado. 
+
+Fora de funções e métodos, o `this` representa o escopo global. Quando no navegador representa o `Window`.
+
+````js
+this.nome = 'teste'
+
+console.log(window.nome) // teste
+````
+
+Dentro de uma função, o `this` pode representar contextos diferentes. Simplesmente dentro da função, o `this` faz referência a `Window`. Mas se a função for um método de um objeto, o `this` faz referência a esse objeto pai. 
+
+````js
+function teste() {
+  return this
+}
+
+teste()
+// Window
+````
+
+Uma função dentro de um objeto, `this` faz referência ao objeto:
+
+````js
+const objeto = {
+  funcao1: function() {
+    console.log(this)
+  }
+}
+
+console.log(objeto.funcao1())
+// objeto {funcao1: ƒ}
+````
+
+---
+
+Algumas vezes é necessário dentro da função acessar o escopo Global e não o objeto pai.
+
+Uma das formas de fazer isso é usando uma `arrow function`:
+
+````js
+const funcao2 = () => console.log(this)
+
+const utilitarios = {
+  funcao: funcao2
+}
+
+utilitarios.funcao
+// Window 
+````
+
+---
+
+## Call, Apply e Bind
+
+Esses métodos são usados para controlar a invocação de uma função. 
+
+Métodos `call` e `apply` podem ser usados para invocar uma função imediatamente. O `bind` pode ser usado para invocar uma função depois. 
+
+## Call
+
+Permite invocar uma função alterando o contexto de `this` dessa função passando qual contexto você quer na execução dele. 
+
+No exemplo a baixo, `this` retorna `undefined`. 
+
+````js
+const saudacao = function() {
+  console.log(this)
+}
+
+saudacao() // undefined
+````
+
+Para que eu use a própria função como contexto de `this` para ela mesma é possível usar o método `call`:
+
+````js
+const saudacao = function() {
+  console.log(this)
+}
+
+saudacao.call(saudacao)
+// ƒ () {
+//   console.log(this)
+// }
+````
+
+Nesse exemplo mudamos o contexto de `this` em `descricao` para `dados`.
+
+Os parâmetros passamos como argumentos seguintes ao `call`:
+
+````js
+const dados = { nome: 'João' }
+
+const descricao = function(idade, sexo) {
+  return `Seu nome é ${this.nome}, sua idade é ${idade} e seu sexo é ${sexo}`
+}
+
+descricao.call(dados, 25, 'masculino')
+// Seu nome é João, sua idade é 25 e seu sexo é masculino
+````
+
+## Apply
+
+A diferença entre `Apply` para `Call` é que o `Apply` recebe os argumentos através de um array. 
+
+````js
+const dados = { nome: 'Ana' }
+
+const args = [30, 'feminino']
+
+const descricao = function(idade, sexo) {
+  return `Seu nome é ${this.nome}, sua idade é ${idade} e seu sexo é ${sexo}`
+}
+
+descricao.apply(dados, args)
+// Seu nome é Ana, sua idade é 30 e seu sexo é feminino
+````
+
+## Bind
+
+`bind` ele cria uma nova função a partir de outra função. 
+
+O que precisamos fazer é passar o contexto do `this` que queremos que essa função nova receba.
+
+````js
+const dados = { nome: 'Maria' }
+
+function descricao(idade) {
+  console.log(`Seu nome é ${this.nome}, sua idade é ${idade}`)
+}
+
+const novaDescricao = descricao.bind(dados)
+
+novaDescricao(25)
+// Seu nome é Maria, sua idade é 25
+````
+
+Diferente do `apply` e do `call` que são executados imediatamente, o `bind` é executado apenas quando queremos.
 
