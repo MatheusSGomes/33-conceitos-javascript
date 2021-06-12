@@ -1208,3 +1208,155 @@ novaDescricao(25)
 
 Diferente do `apply` e do `call` que são executados imediatamente, o `bind` é executado apenas quando queremos.
 
+# Conceito 15 - New, constructor e instanceof
+
+O operador `new` - Cria um novo objeto vazio onde o contexto de `this` será o escopo do novo objeto. 
+
+Nesse novo objeto ele cria uma propriedade chamada `__proto__` que aponta para as propriedades da função construtora que foi usada para criar esse novo objeto. Ele adiciona um `return this` no final da função construtora para que o objeto novo receba o `this` criado na função construtora.
+
+Por exemplo, aqui temos uma função construtora:
+
+````js
+function User(name) {
+  this.name = name
+  this.log = function() {
+    console.log(this)
+  }
+}
+````
+
+Ao criar a função, ele implicitamente cria o objeto vazio de `this`:
+
+````js
+function User(name) {
+  // this = {}
+}
+````
+
+E então no final dela, após adicionar os métodos e propriedades ele retorna o `this` implicitamente, não estamos vendo mas é isso o que acontece ao criar uma função construtora de objetos.
+
+````js
+function User(name) {
+  // this = {}
+  // Métodos e propriedades
+  return this
+}
+````
+
+---
+
+Observe que ele cria uma propriedade chamada `__proto__` que aponta para as propriedades da função construtora que foi usada para criar esse novo objeto.
+
+Logo ao criar um novo objeto e acessar o `proto` teremos o retorno do objeto criado:
+
+````js
+function User(name) {
+  this.name = name
+}
+
+const maria = new User('Maria')
+
+console.log(maria.__proto__)
+// {nome: "Maria", constructor: ƒ}
+````
+
+Podemos inclusive mudar o construtor:
+
+````js
+maria.__proto__.constructor('João')
+````
+
+````js
+console.log(Usuario.prototype)
+// {nome: "João", constructor: ƒ}
+````
+
+---
+
+Em relação ao `constructor`, a principal função dele é implementar código que pode ser reutilizado na criação de novos objetos.
+
+Além dos construtores que podemos criar, o JS já vem com construtores embutidos. 
+
+Construtor de String, Boolean e Number são construtores embutidos.
+
+````js
+const andre = 'André'
+
+console.log(andre)
+// André
+````
+
+````js
+const alex = new String('Alex')
+
+console.log(alex)
+// String {"Alex"}
+````
+
+Um ponto importante de se observar, é que o construtor traz detalhes da String:
+
+````js
+// 0: "A"
+// 1: "l"
+// 2: "e"
+// 3: "x"
+// length: 4
+````
+
+Através do `alex.__proto__` podemos ver todos os métodos de `String`, que podemos usar com qualquer `string` no JavaScript.
+
+São exatamente os mesmos métodos que temos em `andre.__proto__` que não foi criado a partir de um construtor.
+
+Com isso podemos entender o que acontece ao criar uma variável com o nome. 
+
+Basicamente ele pega o conteúdo dela, e através de um construtor cria um novo objeto, utiliza o método ou retorna a propriedade, depois ele limpa.
+
+Por exemplo:
+
+````js
+const felipe = 'Felipe'
+
+console.log(felipe.length) // 6
+````
+
+---
+
+Qualquer função pode ser usada como uma função construtora, desde que seja usado a palavra-chave `new` antes de atribuir a uma variável. 
+
+Se não for usado o `new`, o que estaremos fazendo é atribuindo a uma variável a referência de uma função construtora. Qualquer alteração na variável altera a função construtora uma vez que é passada a referência dela.
+
+É uma convenção usar a primeira letra maiúscula. 
+
+---
+
+É possível verificar se uma variável foi criada a partir de uma função construtora.
+
+Podemos usar o operador `instanceof` para comparar.
+
+````js
+function Usuario(nome) {
+  this.nome = nome;
+}
+
+const matheus = new Usuario('Matheus')
+console.log(matheus instanceof Usuario) // true
+
+const andre = Usuario('André')
+console.log(andre instanceof Usuario) // false
+````
+
+Nesse exemplo, a constante `matheus` é uma instância do construtor `Usuario`. 
+
+Assim como podemos verificar outros construtores também:
+
+````js
+const joao = new String('João')
+console.log(joao instanceof String) // true
+
+const numeros = new Number(12345)
+console.log(numeros instanceof Number) // true
+
+const verdadeiro = new Boolean(true)
+console.log(verdadeiro instanceof Boolean) // true
+````
+
