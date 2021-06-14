@@ -1277,7 +1277,7 @@ Em relação ao `constructor`, a principal função dele é implementar código 
 
 Além dos construtores que podemos criar, o JS já vem com construtores embutidos. 
 
-Construtor de String, Boolean e Number são construtores embutidos.
+Construtor de `String`, `Boolean` e `Number` são construtores embutidos.
 
 ````js
 const andre = 'André'
@@ -1293,7 +1293,7 @@ console.log(alex)
 // String {"Alex"}
 ````
 
-Um ponto importante de se observar, é que o construtor traz detalhes da String:
+Um ponto importante de se observar, é que o construtor traz detalhes da `String`:
 
 ````js
 // 0: "A"
@@ -1359,4 +1359,62 @@ console.log(numeros instanceof Number) // true
 const verdadeiro = new Boolean(true)
 console.log(verdadeiro instanceof Boolean) // true
 ````
+
+# Conceito 16 - Prototype Inheritance e Prototype Chain
+
+Toda função tem uma propriedade chamada `prototype`, que por padrão vem vazia mas podemos adicionar propriedades a ela.
+
+`prototype` é o protótipo daquela função, podemos criar uma espécie de herança de um objeto para o outro.
+
+Essa herança é chamada de `prototype chain`, que é uma cadeia de protótipos. 
+
+Ao criar um novo objeto a partir de uma função construtora, o prototype da função construtora é passado para o novo objeto como uma referência.
+
+````js
+const Usuario = function(nome, idade) {
+    this.nome = nome;
+  	this.idade = idade
+}
+````
+
+ Ao criar um novo objeto com a função construtora, o novo objeto herda seus métodos e propriedades. 
+
+````js
+const carla = new Usuario('Carla', 30)
+
+carla.nome // 'carla'
+carla.idade // 30
+````
+
+Ao adicionar um novo método ao protótipo do construtor, o novo objeto criado continua herdando propriedades e métodos:
+
+````js
+Usuario.prototype.pegarDescricao = function() {
+    return 'Nome: ' + this.nome + ' Idade: ' + this.idade
+}
+
+carla.pegarDescricao()
+"Nome: Matheus Idade: 30"
+````
+
+Quando tentamos acionar o método `pegarDescricao()`, ele primeiro procura no construtor, se ele não achar esse método no construtor ele procura no protótipo.
+
+`pegarDescricao()` foi criado no `prototype` do construtor, se tornou acessível para o novo objeto:
+
+````js
+Usuario.prototype
+// {pegarDescricao: ƒ, constructor: ƒ}
+
+carla.__proto__
+// {pegarDescricao: ƒ, constructor: ƒ}
+````
+
+Nos métodos diretos, não tem o método `pegarDescricao`:
+
+````js
+console.log(carla)
+// Usuario {nome: "Carla"}
+````
+
+Resumindo, tudo o que foi criado na função construtora, os objetos criados a partir dela vão herdar.
 
