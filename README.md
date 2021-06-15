@@ -1418,3 +1418,58 @@ console.log(carla)
 
 Resumindo, tudo o que foi criado na função construtora, os objetos criados a partir dela vão herdar.
 
+# Conceito 17 - Mais formas de criar objetos
+
+Forma 1 - `Object.create()`
+
+Esse método aceita 2 argumentos. O primeiro é o `prototype` de algum objeto. O segundo argumento são as propriedades desse objeto, são as chamadas propriedades descritoras, elas são opcionais.
+
+`````js
+const aluno = Object.create({name: 'gabriel', age: 13})
+
+console.log(aluno)
+// { age: 13, name: "gabriel" }
+`````
+
+Agora passando o `prototype` de algum objeto:
+
+````js
+let Aluno = function(name, age) {
+  this.name = name
+  this.age = age
+}
+
+const gabriel = new Aluno('Gabriel', 13)
+const novoGabriel = Object.create(gabriel)
+
+novoGabriel.age = 15
+
+console.log(gabriel)
+// { age: 13, name: "Gabriel" }
+
+console.log(novoGabriel)
+// { age: 15, name: "Gabriel" }
+
+console.log(novoGabriel instanceof Aluno)
+// true
+````
+
+Um ponto importante de ser observado aqui é que aluno se torna um novo objeto, mas ele continua sendo uma instância do construtor `Aluno`, mesmo tendo sido criado a partir do objeto `gabriel`.
+
+Mesmo o objeto `novoGabriel` tendo sido alterado na idade para 15, ainda sim ele continua sendo uma instância do construtor `Aluno`.
+
+A única forma de não criar essa instância é criando com o construtor separado:
+
+````js
+const novoGabriel = Object.create({name: 'Gabriel', age: 16})
+
+console.log(novoGabriel instanceof Aluno)
+// false
+````
+
+Porém a forma mais usual de `Object.create()` é passar um `prototype` de algum objeto como primeiro argumento. 
+
+---
+
+Agora criando o objeto usando o protótipo do construtor com as propriedades descritoras:
+
