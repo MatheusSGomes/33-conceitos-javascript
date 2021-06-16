@@ -1420,16 +1420,9 @@ Resumindo, tudo o que foi criado na função construtora, os objetos criados a p
 
 # Conceito 17 - Mais formas de criar objetos
 
-Forma 1 - `Object.create()`
+`Object.create()`
 
-Esse método aceita 2 argumentos. O primeiro é o `prototype` de algum objeto. O segundo argumento são as propriedades desse objeto, são as chamadas propriedades descritoras, elas são opcionais.
-
-`````js
-const aluno = Object.create({name: 'gabriel', age: 13})
-
-console.log(aluno)
-// { age: 13, name: "gabriel" }
-`````
+Esse método aceita 2 argumentos. O primeiro argumento é o `prototype` que o novo objeto irá herdar. 
 
 Agora passando o `prototype` de algum objeto:
 
@@ -1441,7 +1434,13 @@ let Aluno = function(name, age) {
 
 const gabriel = new Aluno('Gabriel', 13)
 const novoGabriel = Object.create(gabriel)
+````
 
+Um ponto importante de ser observado aqui é que aluno se torna um novo objeto, mas ele continua sendo uma instância do construtor `Aluno`, mesmo tendo sido criado a partir do objeto `gabriel`.
+
+Mesmo o objeto `novoGabriel` tendo sido alterado na idade para 15, ainda sim ele continua sendo uma instância do construtor `Aluno`.
+
+````js
 novoGabriel.age = 15
 
 console.log(gabriel)
@@ -1454,11 +1453,27 @@ console.log(novoGabriel instanceof Aluno)
 // true
 ````
 
-Um ponto importante de ser observado aqui é que aluno se torna um novo objeto, mas ele continua sendo uma instância do construtor `Aluno`, mesmo tendo sido criado a partir do objeto `gabriel`.
+Se o objeto criado com `new` for alterado, a nova instância criada com o `Object.create()` também é modificada.
 
-Mesmo o objeto `novoGabriel` tendo sido alterado na idade para 15, ainda sim ele continua sendo uma instância do construtor `Aluno`.
+````js
+let Aluno = function(nome, serie) {
+  this.nome = nome
+  this.serie = serie
+}
 
-A única forma de não criar essa instância é criando com o construtor separado:
+const carlos = new Aluno('Carlos', '7ª Série')
+const novoCarlos = Object.create(carlos)
+
+carlos.serie = '8ª Série'
+console.log(carlos)
+// { nome: "Carlos", serie: "8ª Série" }
+
+novoCarlos.nome = 'Carlos Henrique'
+console.log(novoCarlos)
+// { nome: "Carlos Henrique", serie: "8ª Série" }
+````
+
+A única forma de não criar essa instância é criando com o construtor separado, o que não seria uma instância mas um novo objeto em si.
 
 ````js
 const novoGabriel = Object.create({name: 'Gabriel', age: 16})
@@ -1467,9 +1482,122 @@ console.log(novoGabriel instanceof Aluno)
 // false
 ````
 
-Porém a forma mais usual de `Object.create()` é passar um `prototype` de algum objeto como primeiro argumento. 
+---
+
+O segundo argumento são as propriedades desse objeto, são as chamadas <u>propriedades descritoras</u>, elas são opcionais.
+
+Lembrando que ao adicionar algo no `prototype`, ele não aparece diretamente na propriedade, mas o método existe.
+
+Aqui vamos passar o `prototype`. 
+
+`````js
+// criando a factory function
+let Aluno = function(nome, serie) {
+  this.nome = nome
+  this.serie = serie
+}
+
+// aqui adicionamos um método ao prototype
+Aluno.prototype.resumoAluno = function() {
+  return this.nome + ' - ' + this.serie
+}
+
+// passando o prototype para o Object.create
+let chavier = Object.create(Aluno.prototype)
+
+// adicionando o nome 'Chavier' ao construtor
+chavier.nome = 'Chavier Fernandes'
+
+console.log(chavier.resumoAluno())
+// "Chavier Fernandes - undefined"
+
+// retornou 'undefined' porque 'this.serie' não foi definido
+`````
+
+O que usamos para criar o objeto `chavier` é apenas o `prototype` vazio. 
+
+Ou seja, essa é uma forma de se criar objetos, herdar o `prototype` para ser usado, mas sem precisar passar pelo construtor do objeto. 
 
 ---
 
-Agora criando o objeto usando o protótipo do construtor com as propriedades descritoras:
+Para popular esse novo objeto com o segundo parâmetro do `Object.create` que é um 
+
+
+
+
+
+````js
+let Aluno = function(nome, serie) {
+  this.nome = nome
+  this.serie = serie
+}
+
+const novoChavier = Object.create(Aluno, {
+  nome: { writeble: true, configurable: true, value: 'Chavier Oliveira'}
+})
+
+console.log(novoChavier.nome)
+// "Chavier Oliveira"
+````
+
+Ao criar uma propriedade onde a própria propriedade recebe um objeto com as propriedades dela, são `propriedades descritoras` porque estamos descrevendo como aquela propriedade deve se comportar. 
+
+Existem 2 tipos de propriedades descritoras, as **descritoras de dados**, que basicamente descrevem o valor. 
+
+````js
+nome: { writeble: true, configurable: true, value: 'Chavier Oliveira'},
+````
+
+`writable` quer dizer que esse dado pode ser diretamente modificado por atribuição. 
+
+`configurable` quer dizer se o descritor pode ser alterado ou removido do objeto. 
+
+`value` é o valor inicial.
+
+E as **descritoras assessoras** lidam com `getters` e `setters` para lidar com os dados, o que permite manipular os dados antes de exibir ou de salvar um dado alterado. 
+
+````js
+seriePadrao: { writable: false, configurable: true, value: '5ª Série'},
+serie: { 
+  configurable: true,
+  get: function(){
+    return this.seriePadrao.toUpperCase();
+  },
+  set: function(valor) {
+    this.seriePadrao = valor.toLowerCase()
+  }
+}
+````
+
+Usando de forma prática, vamos criar uma `seriePadrao`, que serve apenas para inicializar a propriedade série com algum valor e assim não dar erro
+
+`get` aqui vai ser usado quando o usuário chamar `serie`. Ao chamar essa propriedade ele vai fazer o que foi configurado em `get` e devolver o retorno dela que nesse caso vai ser o `value` de serie em maiúsculo.
+
+Agora, quando tentar atribuir um novo valor a `serie`, ela vai receber nos parâmetros o `valor`, ou seja, o que o usuário tentou atribuir, e então vai executar a função colocando tudo em minúsculo.
+
+Um resumo geral:
+
+````js
+let Aluno = function(nome, serie) {
+  this.nome = nome
+  this.serie = serie
+}
+
+const novoChavier = Object.create(Aluno, {
+  nome: { writeble: true, configurable: true, value: 'Chavier Oliveira'},
+  seriePadrao: { writable: true, configurable: true, value: '5ª Série'},
+  serie: { 
+    configurable: true,
+    get: function(){
+      return this.seriePadrao.toUpperCase();
+    },
+    set: function(valor) {
+      this.seriePadrao = valor.toLowerCase()
+    }
+  }
+})
+
+console.log(novoChavier.serie)
+// "5ª SÉRIE"
+````
 
