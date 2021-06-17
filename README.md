@@ -1520,11 +1520,7 @@ Ou seja, essa é uma forma de se criar objetos, herdar o `prototype` para ser us
 
 ---
 
-Para popular esse novo objeto com o segundo parâmetro do `Object.create` que é um 
-
-
-
-
+Agora para popular esse novo objeto com o segundo parâmetro do `Object.create`:
 
 ````js
 let Aluno = function(nome, serie) {
@@ -1550,9 +1546,62 @@ nome: { writeble: true, configurable: true, value: 'Chavier Oliveira'},
 
 `writable` quer dizer que esse dado pode ser diretamente modificado por atribuição. 
 
+Por exemplo:
+
+`````js
+const matheus = Object.create({ name: 'Matheus' }, {
+  idade: {
+    writable: false,
+    configurable: true,
+    value: 26
+  }
+})
+
+matheus.idade = 27
+
+console.log(matheus.nome) // 'Matheus'
+console.log(matheus.idade) // 26
+`````
+
+Se `writable` estivesse `true`, ao chamar `matheus.idade` retornaria 27.
+
 `configurable` quer dizer se o descritor pode ser alterado ou removido do objeto. 
 
+Por exemplo:
+
+````js
+const matheus = Object.create({ nome: 'Matheus' }, {
+  idade: {
+    writable: true,
+    configurable: true,
+    value: 26
+  }
+})
+
+console.log(delete matheus.idade) // true
+console.log(matheus.idade) // undefined
+````
+
+Observe que a propriedade `idade` foi deletada, por isso ela retornou `undefined`.
+
+Se eu quiser bloquear a exclusão dessa propriedade em `configurable` eu coloco como `false`:
+
+````js
+const matheus = Object.create({ nome: 'Matheus' }, {
+  idade: {
+    writable: true,
+    configurable: false,
+    value: 26
+  }
+})
+
+console.log(delete matheus.idade) // false
+console.log(matheus.idade) // 26
+````
+
 `value` é o valor inicial.
+
+> É importante observar que o método `create`, ele recebe 2 argumentos. Ao adicionar um objeto no primeiro, esses métodos e propriedades vão para o objeto em si. Enquanto que ao adicionar no segundo argumento, os métodos e propriedades vão para o `prototype`.
 
 E as **descritoras assessoras** lidam com `getters` e `setters` para lidar com os dados, o que permite manipular os dados antes de exibir ou de salvar um dado alterado. 
 
@@ -1599,5 +1648,80 @@ const novoChavier = Object.create(Aluno, {
 
 console.log(novoChavier.serie)
 // "5ª SÉRIE"
+
+novoChavier.seriePadrao = '6ª Série'
+console.log(novoChavier.serie)
+// "6ª SÉRIE"
 ````
 
+Observe que `seriePadrao` foi usada apenas para manipular o `value`.
+
+---
+
+Outro método 
+
+`Object.assign` - O que ele faz é receber objetos e juntar esses objetos em um só. Como argumentos ele recebe quantos objetos eu for passando.
+
+É importante saber que o primeiro objeto é o "alvo", ou seja, é o objeto que receberá todas as propriedades dos objetos seguintes passados por após ele. 
+
+````js
+const semestre1 = { nota1: 7, nota2: 6, nota3: 10 }
+const semestre2 = { nota4: 8, nota5: 9, nota6: 7 }
+
+const notasFinais = Object.assign(semestre1, semestre2)
+
+console.log(notasFinais)
+// { nota1: 7, nota2: 6, nota3: 10, nota4: 8, nota5: 9, nota6: 7 }
+````
+
+A pergunta comum, e se tiver propriedades repetidas. Nesse caso o `assign` sobrescreve colocando a propriedade passada por último.
+
+````js
+const prova = { nota1: 3 }
+const recuperacao = { nota1: 5 }
+
+const notasFinais = Object.assign(prova, recuperacao)
+
+console.log(notasFinais)
+// { nota1: 5 }
+````
+
+Observe que ele mantém a última propriedade passada, no caso do `recuperacao`.
+
+---
+
+Outro ponto importante é que os objetos a partir desse momento se tornam uma referência do objeto criado com `assign`:
+
+````js
+const semestre1 = { nota1: 7, nota2: 6, nota3: 10 }
+const semestre2 = { nota4: 8, nota5: 9, nota6: 7 }
+
+const notasFinais = Object.assign(semestre1, semestre2)
+
+notasFinais.nota1 = 10
+
+console.log(notasFinais)
+// { nota1: 10, nota2: 6, nota3: 10, nota4: 8, nota5: 9, nota6: 7 }
+
+console.log(semestre1.nota1) // 10
+````
+
+Observe que o JS mudou o valor da propriedade no primeiro objeto. Mesmo a atribuição sendo feita ao `Object.assign`.
+
+Uma estratégia para se criar um objeto novo sem nenhuma referência, é passar um objeto vazio no primeiro argumento.
+
+````js
+const obj1 = { valor1: 5, valor2: 9}
+const obj2 = { valor3: 7, valor4: 8}
+
+const res = Object.assign({}, obj1, obj2)
+
+res.valor1 = 6
+console.log(res)
+// { valor1: 6, valor2: 9, valor3: 7, valor4: 8 }
+console.log(obj1.valor1) // 5
+````
+
+Observe que dessa forma ao mudar o `valor1` do objeto final ele não altera o `valor1` da constante `obj1`, apenas da constante `res`.
+
+O `assign` então se torna muito útil para clonar objetos.
