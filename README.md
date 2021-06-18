@@ -1725,3 +1725,151 @@ console.log(obj1.valor1) // 5
 Observe que dessa forma ao mudar o `valor1` do objeto final ele não altera o `valor1` da constante `obj1`, apenas da constante `res`.
 
 O `assign` então se torna muito útil para clonar objetos.
+
+# Conceito 18 - Map, Reduce e Filter
+
+Esses 3 métodos são muito usados para manipular `arrays`.
+
+Método `map()` - ele itera por um `array`, manipula cada valor para que no final ele retorne um novo `array`com cada valor manipulado.
+
+````js
+const numbers = [1, 2, 3]
+const doubles = numbers.map((num) => (num * 2))
+
+console.log(doubles) // [2, 4, 6]
+````
+
+> Em relação a `arrow functions`. Quando o retorno tem apenas 1 linha de código, ao invés de usar chaves e `return` podemos suprimir estes. 
+>
+> E uma dica interessante aqui é que caso o seu retorno tenha apenas 1 linha de código, mas ainda seja grande você pode usar parentesis `()`.
+>
+> Ou quando queremos retornar o resultado dentro de um objeto: `.map(() => ({ chave: valor }))`.
+
+
+
+Método `reduce()` - De forma bem resumida, ela pega cada valor de um `array` e reduz eles devolvendo um único valor. 
+
+````js
+const idades = [15, 18, 20]
+
+const somaIdades = idades.reduce((acumulador, idade) => {
+  return acumulador + idade
+})
+
+console.log(somaIdades) // 53
+````
+
+Observe que `acumulador`, não recebeu nenhum valor. Nesse caso, o método considerou que o `acumulador` é 0 e a partir dai fez a soma com cada idade.
+
+Ao dar um `console.log` no acumulador vemos os seguintes valores:
+
+````js
+const idades = [15, 18, 20]
+
+const somaIdades = idades.reduce((acumulador, idade) => {
+  console.log(acumulador)
+  return acumulador + idade
+})
+
+// 15 - 0 + primeiro index do array
+// 33 - aqui foi somado 15 + 18 = 33
+// 53 - aqui fo somado os 33 + 20 (terceiro index do array)
+````
+
+De forma bem resumida, o `reduce` foi somando o valor que tinha em cada campo do array e colocando na variável `acumulador`. 
+
+Sobre o acumulador, podemos ter um valor de inicialização desse valor. Dessa forma o `acumulador` já começa com um valor e depois vai somando.
+
+Colocamos esse valor como segundo argumento do `reducer()`:
+
+````js
+const idades = [15, 18, 20]
+
+const somaIdades = idades.reduce((acumulador, idade) => {
+  return acumulador + idade
+}, 2)
+
+// 2 + 15 + 18 + 20 = 55
+console.log(somaIdades) // 55
+````
+
+Dessa forma, o acumulador já iniciou com 2, depois foi somando cada index do `array` chegando a 55. 
+
+2 padrões muito comuns encontrados com `reduce()` é o `acumulador` ser uma variável externa inicializada em 0.
+
+````js
+let acumulador = 0;
+
+const somaIdades = idades.reduce((acumulador, idade) => acumulador + idade)
+````
+
+ou a inicialização em 0 é feita na hora de passar o parâmetro:
+
+````js
+const somaIdades = idades.reduce((acumulador = 0, idade) => acumulador + idade)
+````
+
+É importante saber que o `reduce()` recebe 4 parâmetros, na seguinte ordem: Acumulador, valor atual, index atual e array original.
+
+Nos exemplos acima usamos apenas os 2 parâmetros, mas às vezes é necessário saber a posição de um item em específico no array, por isso vai ser necessário usar o terceiro parâmetro o index atual. 
+
+````js
+const idades = [15, 18, 20]
+
+const somaIdades = idades.reduce((acumulador, idade, index) => {
+  console.log(index)
+}, 0)
+
+// 0
+// 1
+// 2
+````
+
+O `0, 1, 2` são as posições do `array`. E é importante saber que se não tiver um inicializador, ele não conta o primeiro index. 
+
+````js
+const somaIdades = idades.reduce((acumulador, idade, index) => {
+  console.log(index)
+})
+
+// 1
+// 2
+````
+
+O quarto parâmetro do callback é o `array` em si, no caso ele vai retorna 3x porque é número de campos que tem no `array`. 
+
+````js
+const somaIdades = idades.reduce((acumulador, idade, index, array) => {
+  console.log(array)
+}, 0)
+
+// [15, 18, 20]
+// [15, 18, 20]
+// [15, 18, 20]
+````
+
+
+
+Método `filter()` - ele itera por um `array` e podemos dar uma condição onde caso o valor passe pela condição retorna no novo `array`.
+
+````js
+const tarefas = [
+  { tarefa: 'Lavar o carro', feito: true },
+  { tarefa: 'Lavar a louça', feito: false },
+  { tarefa: 'Lavar as roupas', feito: true }
+]
+
+const tarefasRealizadas = tarefas.filter((tarefa) => tarefa.feito === true)
+
+console.log(tarefasRealizadas)
+// { feito: true, tarefa: "Lavar o carro" }, { feito: true, tarefa: "Lavar as roupas" }
+````
+
+
+
+---
+
+Dica extra de `Destructuring`
+
+https://medium.com/geekculture/10-javascript-concepts-that-every-developer-should-know-702330e662e2
+
