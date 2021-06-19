@@ -1865,6 +1865,209 @@ console.log(tarefasRealizadas)
 // { feito: true, tarefa: "Lavar o carro" }, { feito: true, tarefa: "Lavar as roupas" }
 ````
 
+# Conceito 19 - Pure Functions e side effects (Efeitos colaterais)
+
+Programação funcional, é um paradigma de programação, ou seja, é uma forma de desenvolver onde se cria diversas funções puras. Essas funções evitam compartilhar estados, dados mutáveis e efeitos colaterais. 
+
+Função pura é uma função que se ela receber os mesmos tipos de dados, ela retorna os mesmos tipos de valores. 
+
+Ela depende apenas dos argumentos que recebe para produzir um resultado. 
+
+Quando estamos trabalhando com funções impuras, uma função faz muitas ações:
+
+````js
+const aluno = { aluno: 'André', pontos: 5 }
+
+const pontoExtraAluno = function(usuario) {
+  usuario.aluno = usuario.aluno.toUpperCase()
+  usuario.pontos += 1
+  return usuario
+}
+
+pontoExtraAluno(aluno)
+console.log(aluno)
+// { aluno: "ANDRÉ", pontos: 6 }
+````
+
+Quando estamos trabalhando com funções puras, cada função faz apenas uma ação:
+
+````js
+const aluno = { nome: 'André', pontos: 5 }
+
+// cada função executando uma coisa apenas
+const nomeMaiusculo = (nome) => nome.toUpperCase()
+const pontoExtra = (pontos) => aluno.pontos + 1
+
+aluno.nome = nomeMaiusculo(aluno.nome)
+aluno.pontos = pontoExtra(aluno.pontos)
+
+console.log(aluno)
+// { nome: "ANDRÉ", pontos: 6 }
+````
+
+A função pura recebe um valor, retorna algo do mesmo tipo do valor.
+
+A grande vantagem de desenvolver com funções puras é a facilidade para ler o código. Funções com efeitos colaterais ficam difíceis de ler.
+
+### Imutabilidade (State Mutation)
+
+No JS atribuímos um valor de 2 formas. Para tipos primários passamos o valor. Para objetos passamos a referência. 
+
+Em um tipo primário, ao passar o valor dele para outra variável e depois mudamos o valor não afeta a variável que recebeu o valor, por isso ele é **imutável**. 
+
+````js
+let texto = 'texto'
+
+let textoNovo = texto
+textoNovo = 'texto 2'
+
+console.log(texto) // "texto"
+console.log(textoNovo) // "texto 2"
+````
+
+*Apenas lembrando que o JavaScript tem 6 tipos de dados primitivos, ou seja, esses dados são imutáveis: Boolean, Null, Undefined, Number, BigInt, String.*
+
+Os tipos de referência ao atribuir um valor nele, o valor é alterado para qualquer outra variável que aponte para esse espaço na memória onde está o objeto tornando ele mutável. 
+
+````js
+let objeto = { chave: 'valor' }
+
+let novoObjeto = objeto
+novoObjeto.chave = 'Novo valor'
+
+console.log(objeto) // { chave: "Novo valor"}
+console.log(novoObjeto) // { chave: "Novo valor" }
+````
+
+*Lembrando que tipos de referência, ou também chamados de tipos complexos são objects, functions e arrays*
+
+É importante lembrar que tudo além de tipos primitivos é mutável. 
+
+Esse é um dos motivos que fazem muitos desenvolvedores não gostarem do JavaScript, pelo fato de ser uma linguagem de tipagem fraca. Uma alternativa para isso é o TypeScript.
+
+Para garantir que o código fique mais perto de ser imutável, a dica é não mudar objetos em uma função. 
+
+Outra tica é usar `const` ao invés de `var`.
+
+---
+
+## Truques Úteis
+
+### Truque 8 - Atributo defer
+
+É um truque usado para que o a tag de script seja lida apenas quando o HTML for completamente carregado.
+
+Existem vários truques em relação a isso, eventos que programadores antigos gostavam de usar mas sem dúvida alguma esse é o mais fácil e rápido.
+
+````html
+<script src="main.js" defer></script>
+````
+
+### Truque 7 - 3 formas úteis de clonar objeto
+
+É importante lembrar que objetos em JavaScript são referências de tipo, não é possível usar `=` para clonar. Por isso é sempre bom ter na manga formas de fazer isso:
+
+````js
+const pessoa = {
+  nome: 'Alex',
+  idade: 55
+}
+
+// Método Object.assign
+const novaPessoa1 = Object.assign({}, pessoa)
+novaPessoa1.idade = 70
+
+console.log(novaPessoa1) // { nome: 'Alex', idade: 70 }
+console.log(pessoa) // { nome: 'Alex', idade: 50 }
+
+// JSON
+const novaPessoa2 = JSON.parse(JSON.stringify(pessoa))
+novaPessoa2.nome = 'João'
+
+console.log(novaPessoa2) // { nome: 'João', idade: 50 }
+console.log(pessoa) // { nome: 'Alex', idade: 50 }
+
+// Spread Operator
+const novaPessoa3 = { ...pessoa }
+novaPessoa3.idade = 15
+
+console.log(novaPessoa3) // { nome: 'Alex', idade: 15 }
+console.log(pessoa) // { nome: 'Alex', idade: 50 }
+````
+
+Observe que nenhuma propriedade do objeto `pessoa` não foi reatribuída. 
+
+### Truque 6 - Filtrar valores duplicados em um array
+
+````js
+let nomes = ['Samuel', 'João', 'Pedro', 'Ana', 'Fernanda', 'João', 'Pedro']
+
+// João e pedro repetidos 2x
+
+console.log([...nomes]) // ["Samuel","João","Pedro","Ana","Fernanda","João","Pedro"]
+console.log([... new Set(nomes)]) // ["Samuel","João","Pedro","Ana","Fernanda"]
+````
+
+### Truque 5 - Verificar se um objeto está vazio
+
+Esse truque em especial é bastante útil para quando estamos trabalhando com banco de dados e JSON, porque assim podemos verificar se existe dado sendo retornado e se não tomar alguma ação evitando uma quebra no programa.
+
+````js
+let pessoa = {
+  nome: 'Eduardo',
+  idade: 35
+}
+let objeto = {}
+console.log(Object.entries(pessoa).length) // 2
+console.log(Object.entries(objeto).length) // 0
+
+// outra forma usual
+console.log(Object.entries(pessoa).length === 0) // false
+console.log(Object.entries(objeto).length === 0) // true
+
+````
+
+### Truque 4 - Limpar todos os campos do array 
+
+````js
+let arrayTeste = ['campo0', 'campo1', 'campo2']
+arrayTeste.length = 0
+
+console.log(arrayTeste) // []
+````
+
+### Truque 3 - Número aleatório dentro de um intervalo
+
+````js
+function randomNumber(num1, num2) {
+  return Math.random() * (num2 - num1) + num1
+}
+
+console.log(randomNumber(10, 20))
+````
+
+### Truque 2 - Teste condicional rápido
+
+````js
+let condition = false
+
+if (condition) {
+  console.log('Verdadeiro')
+}
+
+condition && console.log('Verdadeiro')
+````
+
+### Truque 1 - Fazer um evento acontecer apenas 1 vez
+
+````js
+const btn = document.querySelector('#btn')
+
+btn.addEventListener('click', () => {
+  console.log('teste')
+}, { once: true })
+````
+
 
 
 ---
