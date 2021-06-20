@@ -1909,7 +1909,7 @@ A função pura recebe um valor, retorna algo do mesmo tipo do valor.
 
 A grande vantagem de desenvolver com funções puras é a facilidade para ler o código. Funções com efeitos colaterais ficam difíceis de ler.
 
-### Imutabilidade (State Mutation)
+### State Mutation (Mutação de estado)
 
 No JS atribuímos um valor de 2 formas. Para tipos primários passamos o valor. Para objetos passamos a referência. 
 
@@ -1927,7 +1927,7 @@ console.log(textoNovo) // "texto 2"
 
 *Apenas lembrando que o JavaScript tem 6 tipos de dados primitivos, ou seja, esses dados são imutáveis: Boolean, Null, Undefined, Number, BigInt, String.*
 
-Os tipos de referência ao atribuir um valor nele, o valor é alterado para qualquer outra variável que aponte para esse espaço na memória onde está o objeto tornando ele mutável. 
+Os tipos de referência ao atribuir um valor nele, o valor é alterado para qualquer outra variável que aponte para esse espaço na memória onde está o objeto tornando ele **mutável**. 
 
 ````js
 let objeto = { chave: 'valor' }
@@ -1948,6 +1948,130 @@ Esse é um dos motivos que fazem muitos desenvolvedores não gostarem do JavaScr
 Para garantir que o código fique mais perto de ser imutável, a dica é não mudar objetos em uma função. 
 
 Outra tica é usar `const` ao invés de `var`.
+
+# Conceito 20 - Closures
+
+Funções no JavaScript não são apenas funções, também são `closures`, também chamadas de fechamentos.
+
+Isso significa que elas tem acesso a variáveis declaradas fora delas.
+
+````js
+const nome = 'Caio'
+
+function cumprimentar() {
+  console.log('Olá ' + nome)
+}
+
+cumprimentar() // Olá Caio
+````
+
+Existem linguagens que não aceitam `closures`. Ou seja, não permitem acesso ao escopo externo. Para pode acessar uma variável externa seria necessário passar o nome como argumento da função para pode ter acesso a ela dentro. 
+
+A função guarda uma referência do escopo de fora. E não uma cópia da variável dentro da função.
+
+Isso é possível de ser entendido ao mudar a variável antes da execução.
+
+````js
+let nome = 'Caio'
+function cumprimentar() {
+  console.log('Olá ' + nome)
+}
+nome = 'Maicon'
+cumprimentar() // "Olá Maicon"
+````
+
+# Conceito 21 - High Order Functions
+
+Funções de alta ordem são funções que podem receber outras funções como argumento, ou que retornam outra função.
+
+Funções `callback` são high order functions. São funções executadas no final de outras funções. 
+
+````js
+const element = document.querySelector('.element')
+
+element.addEventListener('click', () => { alert('click on element') })
+````
+
+Normalmente são funções anônimas passadas como último argumento de outras funções mas podem ser funções declaradas antes.
+
+Geralmente, passamos uma função declarada antes quando vamos trabalhar com uma função compartilhada com outros eventos. 
+
+````js
+const element = document.querySelector('.element')
+
+function alertElement() {
+  alert('click on element')
+}
+
+element.addEventListener('click', alertElement)
+````
+
+Essa estratégia de passar uma função para ser executada após a função pai ser executada, permite um comportamento assíncrono, ou seja, o script continua executando enquanto espera por um resultado. 
+
+Elas também podem retornar outras funções:
+
+````js
+const upperCase = function(name) {
+    return name.toUpperCase()
+}
+
+upperCase('Ícaro')
+"ÍCARO"
+````
+
+Dessa forma podem acontecer situações diferentes:
+
+````js
+function showAlert() {
+    return alert('click')
+}
+
+function callAlert() {
+    return showAlert
+}
+
+callAlert() // ƒ showAlert() { return alert('click') }
+callAlert()() // executa o alerta
+````
+
+Isso acontece porque `callAlert` retornou uma função não ativada, ou seja, sem os parentesis, ao chamar `callAlert()` ele retorna a função `showAlert` não ativada. Apenas ao chamar `callAlert()()` que é retornado `showAlert` executando ela. 
+
+# Conceito 22 - Recursion
+
+Recursão no JavaScript é a habilidade de uma função chamar ela mesma de dentro dela.
+
+````js
+function recursao() {
+  recursao()
+}
+recursao()
+````
+
+A recursão feita da forma errada quebra o código porque ela vai entrar em loop sendo chamada ela mesma infinitamente. 
+
+Para fazer uma recursão útil é necessário criar um evento de saída.
+
+````js
+function count(num) {
+  console.log(num)
+  if(num > 0) {
+    count(num - 1)
+  }
+}
+count(5)
+// 5
+// 4
+// 3
+// 2
+// 1
+// 0
+````
+
+Aqui o evento de saída foi o `num > 0`.
+
+Algumas vezes o programador vai preferir usar recursão ao invés de fazer o loop. Muito comum ao se usar o paradigma funcional. É importante entender.
+
+
 
 ---
 
