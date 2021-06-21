@@ -2071,6 +2071,131 @@ Aqui o evento de saída foi o `num > 0`.
 
 Algumas vezes o programador vai preferir usar recursão ao invés de fazer o loop. Muito comum ao se usar o paradigma funcional. É importante entender.
 
+# Conceito 23 - Collections e Generators
+
+### Collections
+
+Coleções no JS são objetos iteráveis. Existem 2 novos construtores que permitem criar essas coleções. `Set` e `Map`. São novos objetos criados para suprir as necessidades que objetos comuns não atendem. 
+
+Como falta de um método para iterar, forma de evitar colisões entre propriedades, formas de esconder propriedades para não serem usadas ao usar uma chave da propriedade. 
+
+`Set` é uma coleção de valores. Mutável. Tem próprios métodos para inserir e ler dados. Parecido com um `Array`. Não permite ter dados repetidos. Cada dado é único. 
+
+Para inicializar o `Set` é necessário passar um `Array`. 
+
+````js
+const alfabeto = new Set(['a','b','c'])
+console.log(alfabeto) // Set(3) {"a", "b", "c"}
+````
+
+Existe uma função para adicionar um valor para o `Set` chamada `.add()`:
+
+````js
+alfabeto.add('a') // Set(3) {"a", "b", "c"}
+alfabeto.add('d') // Set(4) {"a", "b", "c", "d"}
+````
+
+Não adiciona valores repetidos.
+
+Ao buscar por um item com array, geralmente usamos o método `indexOf`, ele retorna a posição do item caso ele exista, e retorna -1 caso ele não exista.
+
+````js
+['a', 'b', 'c'].indexOf('a') !== -1 // true
+````
+
+Para verificar se um valor existe com o `Set` usamos o método `.has()`:
+
+````js
+alfabeto.has('c') // true
+alfabeto.has('e') // false
+````
+
+Para apagar um dado temos o método `.delete()`, que retorna `true` se conseguiu apagar ou false se não encontrou o dado e por isso não apagou. 
+
+`````js
+alfabeto.delete('d') // true
+alfabeto.delete('e') // false
+`````
+
+Também temos o método `forEach`:
+
+````js
+alfabeto.forEach((letra) => { 
+  return console.log(letra)
+})
+
+// a
+// b
+// c
+````
+
+O `Set` facilita remover dados repetidos em um array porque ele não permite dados repetidos e permite um array no construtor dele:
+
+````js
+let dados = [1, 2, 2, 3, 3, 4, 5]
+const numeros = new Set(dados)
+console.log(numeros) // {1, 2, 3, 4, 5}
+````
+
+Ao passar dados repetidos ele elimina automaticamente os dados repetidos. 
+
+Para transformar em um array novamente usamos o método `from()` do construtor de `Array`:
+
+````js
+Array.from(numeros) // [1, 2, 3, 4, 5]
+````
+
+Observação: Não existe indexação de dados com `Set`. 
+
+Para pegar o primeiro valor do array usamos o index `array[0]`, no `Set` isso não existe.
+
+---
+
+Outro novo construtor que permite criar coleções é `Map`, muito parecido com o `Set` com a diferença de que ele funciona com chave e valor. 
+
+O `Map` também recebe um array no construtor, com a diferença de que para cada valor ele recebe um outro array que dentro vai ter a chave e o valor.
+
+````js
+const dados = new Map([['nome', 'Felipe'], ['idade', 17]])
+
+console.log(dados) // {"nome" => "Felipe", "idade" => 17}
+````
+
+Diferente do `.add`, para inserir dados no `Map` usamos o método `.set()`.
+
+````js
+dados.set('cidade', 'Salvador')
+
+// {"nome" => "Felipe", "idade" => 17, "cidade" => "Salvador"}
+````
+
+Para buscar um dado usamos o método `.get()` e passamos a chave:
+
+````js
+dados.get('nome') // Felipe
+````
+
+Facilmente iterável através do método `forEach`, onde é retornado todos os valores:
+
+````js
+dados.forEach((dado) => console.log(dado))
+
+// Felipe
+// 17
+// Salvador
+````
+
+````js
+dados.forEach((dado, chave) => console.log(dado, chave))
+// Felipe nome
+// 17 "idade"
+// Salvador cidade
+````
+
+### Generators
+
+
+
 
 
 ---
