@@ -2194,6 +2194,125 @@ dados.forEach((dado, chave) => console.log(dado, chave))
 
 ### Generators
 
+São funções que podem ser usadas para controlar iterações.
+
+Quando temos um loop de For, ele é 100% executado no momento que é chamado.
+
+````js
+function contador(num) {
+  for(let i = 1; i <= num; i++) {
+    console.log(i)
+  }
+}
+
+contador(3)
+// 1
+// 2
+// 3
+````
+
+No momento em que `contador` é chamado, o `for` dentro dele é 100% executado.
+
+No JavaScript existem os `generators`. São funções que podemos controlar cada iteração ao chamar um método `next()`.
+
+Para se tornar um `generator` é necessário colocar o asterisco antes de declarar o nome da função. 
+
+É o `*` que simboliza que essa função vai ser `generator`. Apenas um identificador. 
+
+````js
+function *contador(num) {
+  for(let i = 1; i <= num; i++) {
+    yield console.log(i)
+  }
+}
+````
+
+A palavra-chave `yield`, funciona como um `return`. Porém, com diferenças. 
+
+A primeira é que o `return` termina a execução do que está sendo executado, já o `yield` pausa a execução na linha que foi colocado, e na próxima vez que a função for chamada ele volta de onde parou até o próximo `yield`:
+
+````js
+const totalContador = contador(3)
+
+totalContador.next()
+// 1
+// {value: undefined, done: false}
+totalContador.next()
+// 2
+// {value: undefined, done: false}
+totalContador.next()
+// 3
+// {value: undefined, done: false}
+totalContador.next()
+// {value: undefined, done: true} 
+````
+
+É preciso atribuir ele a uma variável antes de usar. Se eu simplesmente executar a função, ele vai retornar 1 novamente, não vai prosseguir. 
+
+O método `next()` executa o método até atingir o `yield` e retorna o valor na propriedade `value` do objeto. 
+
+Observe que em cada execução, além do valor retornou o objeto:
+
+````js
+{value: undefined, done: true} 
+````
+
+Esse objeto, o `value` é o valor retornado do `yield`:
+
+````js
+function *contador(num) {
+  for(let i = 1; i <= num; i++) {
+    yield i
+  }
+}
+
+const totalContador = contador(3)
+
+totalContador.next()
+// {value: 1, done: false}
+
+totalContador.next().value
+// 2
+
+totalContador.next().value
+// 3
+
+totalContador.next()
+// {value: undefined, done: true}
+````
+
+Quando termina ele retorna que o valor está indefinido, e `done` como `true`.
+
+Como é um objeto, caso queira retorno apenas o valor com `.value` encadeado.
+
+Muito usado para pegar itens de acordo com a iteração do usuário. 
+
+Podemos ter outro `yield` também, assim que ele terminar a iteração com o primeiro executa segundo:
+
+````js
+function *contador(num) {
+  for(let i = 1; i <= num; i++) {
+    yield i
+  }
+  let nome = 'Marcus'
+  nome = nome.toUpperCase()
+  yield nome
+}
+
+let totalContador = contador(3)
+
+totalContador.next()
+// {value: 1, done: false}
+totalContador.next()
+// {value: 2, done: false}
+totalContador.next()
+// {value: 3, done: false}
+totalContador.next()
+// {value: MARCUS, done: false}
+totalContador.next()
+// {value: undefined, done: false}
+````
+
 
 
 
