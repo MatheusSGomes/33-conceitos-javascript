@@ -2313,7 +2313,171 @@ totalContador.next()
 // {value: undefined, done: false}
 ````
 
+# Conceito 24 - Promises
 
+Uma promessa pode ser cumprida ou não cumprida. Não tem um prazo para ser cumprida, pode ser em segundos, minutos ou horas para ser realizada. 
+
+Uma promise tem 3 estados:
+
+Pendente - Quando se está esperando o resultado
+
+Realizada - Quando foi cumprida, ou seja, o resultado foi recebido.
+
+Rejeitada - Quando não foi cumprida ou não retornou o que eu esperava. 
+
+Existe um construtor de promises no JS: `new Promise()`.
+
+Ele tem uma função `callback` que recebe 2 argumentos. O resolve e reject.
+
+````js
+const tarefaExecutada = true
+
+const realizarTarefa = new Promise((resolve, reject) => {
+  if (tarefaExecutada) {
+    resolve(true)
+  } else {
+    reject(false)
+  }
+})
+````
+
+A `promise` não é executada como uma função. Para usa-la, usamos o método `.then()`. Caso tenha erro usamos o método `.catch()`.
+
+````js
+realizarTarefa.then((executada) => {
+  console.log('Tarefa executada')
+}).catch((naoExecutada) => {
+  console.log('Não executada')
+})
+````
+
+Quando nós criamos o `.then()`, ele também recebe um `callback` com 1 argumento. Esse argumento é o resultado esperado no argumento do `resolve()`.
+
+Por exemplo, se no `resolve()` esperasse uma chamada HTTP, quando ela fosse finalizada o resultado seria colocado dentro dela. E consequentemente dentro do primeiro parâmetro do `callback` em `.then()`.
+
+Observe os trechos em destaque:
+
+````js
+if (tarefaExecutada) {
+  resolve(true)
+}
+
+realizarTarefa.then((executada) => {
+  console.log(executada) // true
+}) 
+````
+
+Poderia ser qualquer resultado, até mesmo um objeto, array e etc...
+
+````js
+if (tarefaExecutada) {
+  resolve('Qualquer coisa')
+}
+
+realizarTarefa.then((executada) => {
+  console.log(executada) // "Qualquer coisa"
+})
+````
+
+O ponto importante de se entender aqui é que no `resolve()` podemos colocar uma chamada assíncrona. Quando ela for realizada, o resultado dela será refletido no `.then()` e então poderemos resgatar esse valor.
+
+Assim como o erro, caso seja `reject()` cai no `.catch()`.
+
+Colocando em destaque:
+
+````js
+const tarefaExecutada = false
+
+...
+else {
+  reject('Ação não executada')
+}
+
+.catch((naoExecutada) => {
+  console.log(naoExecutada) // "Ação não executada"
+})
+````
+
+---
+
+É possível também fazer o `chain` das `promises`. Ou seja, fazer o resultado de uma `promise` executar outra `promise`.
+
+É uma `promise` retornando outra `promise`:
+
+````js
+const tarefaExecutada = true
+
+const realizarTarefa = new Promise((resolve, reject) => {
+  if (tarefaExecutada) {
+    resolve(true)
+  } else {
+    reject(false)
+  }
+})
+
+const realizarProximaTarefa = (resultado) => {
+  return new Promise((resolve) => {
+    if(resultado) {
+      resolve('Próxima tarefa')
+    } else {
+      resolve('Não executar a próxima')
+    }
+  })
+}
+
+realizarTarefa
+  .then(realizarProximaTarefa)
+  .catch(realizarProximaTarefa)
+  .then(resultado => console.log(resultado))
+````
+
+O que retornar da primeira `promise` pode ser encadeado na próxima `promise`. 
+
+Uma `promise` retorna outra `promise`. 
+
+---
+
+`Callback Hell` é algo que você deve evitar no JavaScript:
+
+````js
+// callback hell
+promessa1.then(() => {
+  promessa2.then(() => {
+    promessa3.then(() => {
+    	...
+  	})
+  })
+})
+
+// chain
+promessa1
+	.then(() => {})
+  .then(() => {})
+  .then(() => {})
+
+````
+
+A execução não é alterada. O que muda é a legibilidade do código. 
+
+---
+
+Outro ponto importante de se observar é que `promises` são assíncronas. Logo, elas são executadas sempre depois. 
+
+Tudo o que é `callback` é colocado no `Event Queue`, que é a fila de eventos, só quando não tiver nada para executar o `Event Loop` passa pelo `Event Queue` e executa os eventos que estão lá.
+
+````js
+console.log('Início')
+
+realizarTarefa.then((executada) => {
+  console.log(executada)
+})
+
+console.log('Fim')
+
+// "Início"
+// "Fim"
+// "Qualquer coisa"
+````
 
 
 
@@ -2443,4 +2607,41 @@ btn.addEventListener('click', () => {
 Dica extra de `Destructuring`
 
 https://medium.com/geekculture/10-javascript-concepts-that-every-developer-should-know-702330e662e2
+
+---
+
+Operadores
+
+Comma Operator
+
+Usado para avaliar várias expressões em uma linha.
+
+````js
+for (var i = 0, j = 10; i <= 3; i++, j++){
+  console.log(`Andar numero: ${i} Apartamento Número: ${j}`)
+}
+
+// "Andar numero: 0 Apartamento Número: 10"
+// "Andar numero: 1 Apartamento Número: 11"
+// "Andar numero: 2 Apartamento Número: 12"
+// "Andar numero: 3 Apartamento Número: 13"
+````
+
+Operador In
+
+Retorna `true` caso a chave esteja no objeto ou em seu protótipo.
+
+````js
+const usuario = {
+  nome: 'João',
+  profissao: 'Desenvolvedor'
+}
+
+console.log('nome' in usuario) // true
+delete usuario.nome
+console.log('nome' in usuario) // false
+console.log('toString' in usuario) // true
+````
+
+Observe que `toString` é um método que está no protótipo de todo objeto.
 
