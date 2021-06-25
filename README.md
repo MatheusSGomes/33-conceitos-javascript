@@ -2479,6 +2479,92 @@ console.log('Fim')
 // "Qualquer coisa"
 ````
 
+# Conceito 26 - Data Structure Stack e Queue
+
+Estrutura de dados é uma maneira de organizar os dados no computador para que eles sejam utilizados com eficiência. Eficiência significa: De acordo com as suas necessidades.
+
+Cada estrutura de dados serve para um momento em específico. 
+
+## Stack e Queue
+
+Pilhas (Stack) são uma das estruturas mais importantes no JS e são basicamente um Array de dados.
+
+Existem alguns métodos para isso:
+
+````js
+const numeros = []
+
+numeros.push(1)
+numeros.push(2)
+numeros.push(3)
+
+console.log(numeros) // [1, 2, 3]
+
+numeros.pop()
+
+console.log(numeros) // [1, 2]
+````
+
+Observe que o método `push` adiciona o item no final da fila. Enquanto que o método `pop` remove o último elemento no final da fila.
+
+Trabalhando com `Arrays` também temos os métodos `shift` e `unshift`:
+
+````js
+const letras = []
+
+letras.unshift('a')
+letras.unshift('b')
+letras.unshift('c')
+
+console.log(letras) // ["c", "b", "a"]
+
+letras.shift()
+
+console.log(letras) // ["b", "a"]
+````
+
+Ao contrário do `push` e do `pop`, o `unshift` insere no começo da fila e o `shift` remove o primeiro elemento da fila.
+
+**OBS:** Esses 2 últimos métodos exigem mais processamento porque toda vez que ele remove ou adiciona um elemento no começo da fila, ele precisa reindexar todos os elementos posteriores.
+
+Em uma pilha, o primeiro que entrou é o primeiro a sair. Esse é o protocolo *FIFO - first in, first out*.
+
+Um exemplo de pilha (stack) usando o JS:
+
+````js
+const pilha = []
+
+pilha.push(1)
+pilha.push(2)
+pilha.push(3)
+
+console.log(pilha) // [1, 2, 3]
+
+pilha.shift()
+
+console.log(pilha) // [2, 3]
+````
+
+---
+
+Outro protocolo é o *LIFO - Last In, First Out* que é a estrutura de dados da fila. 
+
+Nesse protocolo o último a entrar é o primeiro a sair:
+
+````js
+const fila = []
+
+fila.push('a')
+fila.push('b')
+fila.push('c')
+
+console.log(fila) // ["a", "b", "c"]
+
+fila.pop() // remove o último elemento
+
+console.log(fila) // ["a", "b"]
+````
+
 
 
 ---
