@@ -2478,6 +2478,64 @@ console.log('Fim')
 // "Fim"
 // "Qualquer coisa"
 ````
+# Conceito 25 - Async Await
+
+É uma forma mais recente de se trabalhar com `promises` no JS.
+
+Para transformar uma função em assíncrona, colocamos o `async` antes da função. 
+
+Onde for esperar por uma `promise` colocamos o `await`:
+
+````js
+async function funcaoAssincrona() {
+  await promise 
+}
+````
+
+---
+
+Primeiro precisamos de uma função assíncrona que retorna uma promise. Aqui colocamos um `setTimeout` para que o texto passado seja entregue caso a promessa seja resolvida, isso após 2 segundos:
+
+````js
+function espera2segundos(text) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(text)
+    }, 2000)
+  })
+}
+
+espera2segundos('Texto exibido após 2 segundos')
+  .then(res => console.log(res))
+
+// Texto exibido após 2 segundos
+````
+
+Usando `async` e `await`:
+
+````js
+async function aguardaResposta() {
+  const resposta = await espera2segundos('Texto exibido após 2 segundos')
+  console.log(resposta)
+}
+
+aguardaResposta()
+
+// Texto exibido após 2 segundos
+````
+
+Ao colocar um `await`, é como se fosse encadeado um `.then()`:
+
+````js
+espera2segundos('Texto exibido após 2 segundos')
+  .then(res => console.log(res))
+````
+
+````js
+await espera2segundos('Texto exibido após 2 segundos')
+````
+
+Uma observação é que uma função assíncrona retorna uma `promise` também. Logo, podemos fazer o `chain`, de um `.then()` e `.catch()`.
 
 # Conceito 26 - Data Structure Stack e Queue
 
