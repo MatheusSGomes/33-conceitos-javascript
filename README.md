@@ -2623,6 +2623,99 @@ fila.pop() // remove o último elemento
 console.log(fila) // ["a", "b"]
 ````
 
+# Conceito 27 - Expensive Operation e Big o Notation
+
+É um assunto muito comum ao se estudar algoritmos. 
+
+É uma operação matemática que representa o quanto uma operação pode ser custosa em termos de tempo de execução a partir de uma entrada de dados. 
+
+"O" vem de ordem de. Porque o crescimento de uma operação é também chamado de ordem de uma função. 
+
+"Big O", também chamado de "Grande-O", porque representa o pior caso de complexidade de execução de uma determinada operação.
+
+> "descreve o comportamento limitante de uma função quando o argumento tende a um valor específico ou para o infinito" - Wikipedia
+
+Usamos a notação de Big O para **classificar algoritmos** por como eles respondem a mudança nos dados que estão entrando na função.
+
+O quão rápido essa função é executada, **o quanto de memória é utilizada** e **quantas interações são feitas** para se chegar ao resultado.
+
+Tipos comuns:
+
+1. Notação de O(1) - Ordem de 1. São algoritmos de tempo de execução constante.
+
+Significa que independente da complexidade, ou seja, do quão maior pode ser o Array o tempo de execução é sempre o mesmo e normalmente é usada apenas 1 operação.
+
+Ex: `.pop()` - Não importa quantos valores temos no array, é feito uma única operação que é remover o último valor. 
+
+````js
+const dados = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+const numRemovido = dados.pop()
+console.log(numRemovido) // 9
+````
+
+O Array não é percorrido, não é feito iteração... nada mais é feito.
+
+2. Notação de O(n) - N porque não temos o número exato de entradas, esse seria um algoritmo de tempo linear, dependendo do tamanho da entrada podem haver mais ou menos operações.
+
+Um exemplo, é uma função que tenta achar um número no array, e dar console na posição do item procurado.
+
+No JS existe uma função que faz isso, é a `indexOf`, porém faremos manualmente a título de exemplo:
+
+````js
+const dados = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+function o_n(entrada, numero) {
+  for(let i = 0, max = entrada.length; i < max; i++) {
+    if(entrada[i] === numero) {
+      return i
+    }
+  }
+  return 'valor não encontrado'
+}
+
+console.log(o_n(dados, 7)) // 7
+````
+
+Ele retorna exatamente a posição do número.
+
+Quanto maior for o array mais custoso fica essa operação.  E a operação mais custosa possível é ele percorrer todo o array e não encontrar o valor. 
+
+3. O(n)² - Big O de tempo quadrático
+
+Demora o dobro de iterações em relação ao tamanho da entrada e cresce exponencialmente quanto maior for a entrada de dados.
+
+É possível reproduzir isso com um loop dentro de outro loop. 
+
+````js
+const dados = [0, 1, 2, 3]
+
+function o_n_quadrado(entrada) {
+  let matriz = []
+  for(let i = 0, max = entrada.length; i < max; i++) {
+    matriz[i] = []
+    for(let j = 0, maxj = entrada.length; j < maxj; j++) {
+      matriz[i].push(j)
+    }
+  }
+  return matriz
+}
+
+console.log(o_n_quadrado(dados)) 
+// [[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]]
+````
+
+Operações assim são o dobro custosas porque além do primeiro loop percorrer o array até o final, também existe outro loop que percorre o array até o final. Por cada posição é percorrido o array várias vezes.
+
+Em suma, por cada n posição, é percorrido n vezes.
+
+Ou seja, quanto mais dados tivesse no array de entrada, mais custosa seria essa operação.
+
+*Matriz são arrays dentro de arrays*
+
+
+
+// 08:16
+
 
 
 ---
