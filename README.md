@@ -2712,11 +2712,112 @@ Ou seja, quanto mais dados tivesse no array de entrada, mais custosa seria essa 
 
 *Matriz são arrays dentro de arrays*
 
+4.  O (n log n) - big O, n log de n - ou também chamado de ordem n, log de n.
 
+É o algoritmo de tempo logaritmo. São mais eficientes para se trabalhar com entradas grandes. 
 
-// 08:16
+Ao invés de buscar valor por valor, quebramos a entrada em 2 partes na metade. Assim é possível descartar uma parte da entrada em cada iteração.
 
+Dessa forma é possível achar um valor dentro da coleção de 1 milhão de valores em até 20 iterações. 
 
+O algoritmo mais famoso nesse caso é o `Quick Sort` consegue ordenar uma entrada de forma bem eficiente.
+
+Nesse exemplo a baixo, ordenamos uma série de letras em ordem alfabética.
+
+A primeira parte do algoritmo é verificar se a entrada tem mais do que 1 valor. Caso tenha, retorna `true`, caso não ele continua e executando o código que será colocado abaixo:
+
+````js
+const entrada = ['q','a','z','w','s','x','e','d','c','r']
+
+function quickSort(entrada) {
+  if(entrada.length < 2) {
+    return entrada
+  }
+}
+
+console.log(quickSort(entrada)) // undefined
+````
+
+Segunda parte é criada 3 variáveis, a primeira recebe o `pivo`, que é o index  0 do `array`. A segunda vai receber os números da esquerda em um `array`, e a terceira os números da direita em um `array`. 
+
+````js
+function quickSort(entrada) {
+  if(entrada.length < 2) {
+    return entrada
+  }
+  let pivo = entrada[0]
+  let esquerda = []
+  let direita = []
+}
+````
+
+Depois fazemos um loop de `for` onde vai ser percorrido todo o `array`. A diferença é que ele terá uma estrutura condicional de `if` onde caso o valor da entrada percorrido for menor do que o do pivo em questão, o valor será adicionado a esquerda. Caso seja maior, será adicionado na direita.
+
+````js
+function quickSort(entrada) {
+  if(entrada.length < 2) {
+    return entrada
+  }
+  
+  let pivo = entrada[0]
+  let esquerda = []
+  let direita = []
+  
+  for(let i = 1, max = entrada.length; i < max; i++) {
+    if (entrada[i] < pivo) {
+      esquerda.push(entrada[i])
+    } else {
+      direita.push(entrada[i])
+    }
+  }
+}
+````
+
+Para finalizar retornamos dentro de um `array` através de recursão os valores da esquerda, o pivo e os valores da direita desestruturados.
+
+````js
+function quickSort(entrada) {
+  if(entrada.length < 2) {
+    return entrada
+  }
+  
+  let pivo = entrada[0]
+  let esquerda = []
+  let direita = []
+  
+  for(let i = 1, max = entrada.length; i < max; i++) {
+    if (entrada[i] < pivo) {
+      esquerda.push(entrada[i])
+    } else {
+      direita.push(entrada[i])
+    }
+  }
+  
+  return [...quickSort(esquerda), pivo, ...quickSort(direita)]
+}
+
+console.log(quickSort(entrada)) // ["a", "c", "d", "e", "q", "r", "s", "w", "x", "z"]
+````
+
+# Conceito 28 - Algoritmos
+
+Um algoritmo é uma sequência de ações que são tomadas para resolver um problema. 
+
+Uma simples função que resolve uma soma de datas é um exemplo de algoritmo. Não precisa ser algo complexo para ser algoritmo.
+
+É importante sempre refatorar o código, assim podemos pensar de forma diferente, menos custosa, consumindo menos recurso, menos linhas de código e que resolva o problema da mesma forma. 
+
+Repositório JavaScript Algorithms:
+
+https://github.com/trekhleb/javascript-algorithms
+
+https://github.com/trekhleb/javascript-algorithms/blob/master/README.pt-BR.md
+
+http://www.thatjsdude.com/interview/js1.html
+
+Para ter um código analisado por outras pessoas: https://codesignal.com/
+
+# Conceito 29 - Herança, Polimorfismo e reutilização de código
 
 
 
