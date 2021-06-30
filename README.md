@@ -2819,5 +2819,43 @@ Para ter um código analisado por outras pessoas: https://codesignal.com/
 
 # Conceito 29 - Herança, Polimorfismo e reutilização de código
 
+Polimorfismo é chamar o mesmo método em diferentes objetos.
 
+Quando criamos classes e reaproveitamos os métodos da classe pai nas classes filhas, estamos usando o conceito de polimorfismo.
+
+````js
+class Automovel {
+  acelerar() {
+    console.log('Acelerar!')
+  }
+}
+
+class Moto extends Automovel {
+  empinar() {
+    console.log('Empinar!')
+  }
+}
+
+class Ferrari {
+  acelerar() {
+    console.log('Acelera muito!')
+  }
+}
+
+const veiculo = [new Automovel(), new Moto(), new Ferrari()]
+
+veiculo.forEach((metodo) => metodo.acelerar())
+
+// "Acelerar!"
+// "Acelerar!"
+// "Acelera muito!"
+````
+
+Polimorfismo ajuda na reutilização de código, evita repetir o mesmo método sem necessidade. 
+
+Observe que a classe moto herdou o método acelerar de automóvel.
+
+Já a classe Ferrari sobrescreveu o método.
+
+Apenas quando há necessidade sobrescrevemos o método pai como foi o caso da última classe. 
 
