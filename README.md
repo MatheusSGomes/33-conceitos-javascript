@@ -2859,3 +2859,78 @@ Já a classe Ferrari sobrescreveu o método.
 
 Apenas quando há necessidade sobrescrevemos o método pai como foi o caso da última classe. 
 
+# Conceito 30 - Design Patterns (Padrões de Design)
+
+São formas criadas para resolver problemas recorrentes. É um modo de escrever o código para evitar problemas organização de código, legibilidade, manutenção...
+
+### 1º Padrão Módulo (Module)
+
+É um padrão que evita se perder em código quando ele cresce muito.
+
+Além da dificuldade para ler, podemos criar variáveis, funções com nomes duplicados o que pode gerar erros.
+
+Quando modularizamos, encapsulamos o código, criamos variáveis privadas que não ficam expostas em outros arquivos. 
+
+Antigamente se usava IIFE's hoje é mais comum o `module.exports` para exportar e o `require()` para importar.
+
+Temos o `export default` e o `import ... from ...` a partir do ES6. 
+
+A única preocupação mesmo é quais arquivos criar. 
+
+### 2º Padrão Prototype
+
+É muito usado quando temos um modelo, ou template do que queremos criar, então ao invés de repetir o código, podemos usar o `prototype` de outro objeto para criar um novo.
+
+````js
+const usuario = {
+  administrador: false,
+  fazerLogin() {
+    return 'Login feito';
+  },
+  fazerLogout() {
+    return 'Logout feito';
+  }
+}
+
+const novoUsuario = Object.create(usuario, { 
+  nome: { 
+  	value: 'Carlos' 
+	}
+})
+
+console.log(novoUsuario)
+// {
+//  administrador: false,
+//  fazerLogin: function fazerLogin() {
+//    return 'Login feito';
+//  },
+//  fazerLogout: function fazerLogout() {
+//    return 'Logout feito';
+//  }
+// }
+
+console.log(novoUsuario.nome) // "Carlos"
+````
+
+Observe que trabalhamos com herança. Métodos e propriedades herdadas do construtor pai. 
+
+Como todos os objetos são uma referência do objeto base `usuario`, caso eu precise criar uma nova propriedade que será replicada para todos os objetos fica mais fácil.
+
+````js
+usuario.__proto__.atualizar = function() {
+  return 'Informações atualizadas'
+}
+
+console.log(novoUsuario.atualizar())
+// "Informações atualizadas"
+````
+
+### 3º Padrão Observer
+
+
+
+4º Padrão Singleton
+
+
+
+ Module e Prototype
