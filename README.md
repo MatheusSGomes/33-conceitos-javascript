@@ -2863,7 +2863,7 @@ Apenas quando há necessidade sobrescrevemos o método pai como foi o caso da ú
 
 São formas criadas para resolver problemas recorrentes. É um modo de escrever o código para evitar problemas organização de código, legibilidade, manutenção...
 
-### 1º Padrão Módulo (Module)
+### Padrão Módulo (Module)
 
 É um padrão que evita se perder em código quando ele cresce muito.
 
@@ -2877,7 +2877,7 @@ Temos o `export default` e o `import ... from ...` a partir do ES6.
 
 A única preocupação mesmo é quais arquivos criar. 
 
-### 2º Padrão Prototype
+### Padrão Prototype
 
 É muito usado quando temos um modelo, ou template do que queremos criar, então ao invés de repetir o código, podemos usar o `prototype` de outro objeto para criar um novo.
 
@@ -2925,12 +2925,74 @@ console.log(novoUsuario.atualizar())
 // "Informações atualizadas"
 ````
 
-### 3º Padrão Observer
+### Padrão Singleton
+
+Esse padrão restringe a criar várias instâncias de um mesmo objeto. 
+
+Ao criar um objeto a partir de uma classe, ele deve ser único mas pode ser referenciado em outros objetos. 
+
+O objeto único é chamado de `singleton`.
+
+Um exemplo é uma impressora compartilhada em um escritório. Várias pessoas podem usar ao invés de comprar uma impressora para cada pessoa da empresa. 
+
+Muito semelhante a uma central de comando.
+
+Uma `Connection Pool` é um exemplo desse padrão.
+
+Em uma `pool` de conexões de banco, centraliza todas as conexões e gerencia elas em um mesmo objeto. É muito melhor do que deixar vários objetos na aplicação criando várias conexões. 
+
+Para isso é criada apenas uma instância e a referência dela pode ser passada para outros objetos para ser utilizada. 
+
+Outro benefício é reduzir a quantidade de variáveis globais criadas o que evita colisões. 
+
+Usando IIFE:
+
+````js
+const impressora = (function() {
+  let instanciaImpressora;
+  
+  function criar() {
+    function imprimir() {
+      console.log('Imprimir documento')
+    }
+    function ligar() {
+      console.log('Ligando impressora')
+    }
+    
+    return { imprimir, ligar }
+  }
+  
+  return {
+    pegarInstancia: function() {
+      if(!instanciaImpressora) {
+        instanciaImpressora = criar()
+      }
+      return instanciaImpressora
+    }
+  }
+})()
+
+const impressoraEmpresaA = impressora.pegarInstancia()
+impressoraEmpresaA.ligar()
+// "Ligando impressora"
+
+const impressoraEmpresaB = impressora.pegarInstancia()
+impressoraEmpresaA.imprimir()
+// "Imprimir documento"
+````
+
+Uma outra observação:
+
+````js
+console.log(impressoraEmpresaA === impressoraEmpresaB)
+// true
+````
+
+Os métodos ligar e imprimir não podem ser usados diretamente, apenas podemos pegar a instância.
+
+Ou seja, não é possível pegar vários métodos criar, nem ligar várias impressoras. 
+
+Além dos métodos serem privados. 
 
 
 
-4º Padrão Singleton
-
-
-
- Module e Prototype
