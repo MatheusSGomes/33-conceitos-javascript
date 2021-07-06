@@ -2994,5 +2994,84 @@ Ou seja, não é possível pegar vários métodos criar, nem ligar várias impre
 
 Além dos métodos serem privados. 
 
+# Conceito 31 - Aplicações Parciais
 
+A ideia das aplicações parciais é chamar uma função com menos argumentos do que ela espera.
+
+Basicamente, elas começam com uma função e retornamos outra função com argumentos já configurados (ou seja, parcialmente aplicados).
+
+Esse conceito serve para reduzir o número de argumentos que uma função aceita.
+
+Um exemplo que pode ser aplicado com aplicações parciais:
+
+````js
+function lista(conector, ...itens) {
+  const separadorVirgula = itens.slice(0, -1).join(', ')
+  const ultimoItem = itens.pop()
+  return `${separadorVirgula} ${conector} ${ultimoItem}`
+}
+
+const listaE = lista('e', 'Banana', 'Maçã', 'Uva')
+const listaOu = lista('ou', 'Banana', 'Maçã', 'Uva')
+
+console.log(listaE)
+// "Banana, Maçã e Uva"
+
+console.log(listaOu)
+// "Banana, Maçã ou Uva"
+````
+
+OBS: O `...` quando passados como argumento em uma função é chamado de `rest operator`. Já quando estamos quebrando um array, ele se torna o `spread operator`.
+
+---
+
+Com esse exemplo em mãos, é possível usar o conceito de aplicações parciais.
+
+Aqui é possível ter funções que representam cada tipo de lista e usar uma função parcial que vai no criar diferentes tipos de funções que retornam outras funções para serem executadas.
+
+A partir da função `lista`, podemos criar funções diferentes para cada tipo de lista, a lista de `e` e a lista de `ou`.
+
+Semelhante ao conceito de `middleware`, ou seja, ele passa por essa função antes de chegar ao local desejado.
+
+````js
+function lista(conector, ...itens) {
+  const separadorVirgula = itens.slice(0, -1).join(', ')
+  const ultimoItem = itens.pop()
+  return `${separadorVirgula} ${conector} ${ultimoItem}`
+}
+
+function parcial(funcao, juncao) {
+  return (...itens) => {
+    return funcao(juncao, ...itens)
+  }
+}
+
+const listaE = parcial(lista, 'e')
+const listaOu = parcial(lista, 'ou')
+
+console.log(listaE('Banana', 'Maçã', 'Uva'))
+// "Banana, Maçã e Uva"
+
+console.log(listaOu('Banana', 'Maçã', 'Uva'))
+// "Banana, Maçã ou Uva"
+````
+
+Uma outra forma de enxergar as funções parciais:
+
+````js
+const listaE = parcial(lista, 'e')('Banana', 'Maçã', 'Uva')
+const listaOu = parcial(lista, 'ou')('Banana', 'Maçã', 'Uva')
+
+console.log(listaE)
+// "Banana, Maçã e Uva"
+
+console.log(listaOu)
+// "Banana, Maçã ou Uva"
+````
+
+Uma outra forma de escrever a função parcial usando `arrow function`:
+
+````js
+const parcial = (funcao, juncao) => (...itens) => funcao(juncao, ...itens)
+````
 
