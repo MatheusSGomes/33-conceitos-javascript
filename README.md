@@ -2994,7 +2994,8 @@ Ou seja, não é possível pegar vários métodos criar, nem ligar várias impre
 
 Além dos métodos serem privados. 
 
-# Conceito 31 - Aplicações Parciais
+# Conceito 31
+## Aplicações Parciais
 
 A ideia das aplicações parciais é chamar uma função com menos argumentos do que ela espera.
 
@@ -3075,3 +3076,57 @@ Uma outra forma de escrever a função parcial usando `arrow function`:
 const parcial = (funcao, juncao) => (...itens) => funcao(juncao, ...itens)
 ````
 
+## Currying
+
+Transforma uma função com multiplos argumentos em uma série de execução de funções. 
+
+Nesse exemplo, temos uma função que retorna uma frase e transformamos ela em currying.
+
+````js
+const carro = (modelo, tamanho, velocidade) => {
+  return `${modelo} é um carro ${tamanho} e ${velocidade}`
+}
+
+console.log(carro('Ford', 'Médio', 'Lento'))
+// "Ford é um carro Médio e Lento"
+````
+
+Para transformando ela em uma `função currying`, pegamos cada argumento dessa função e transformamos em uma nova função:
+
+`````js
+const carro = (modelo) => (tamanho) => (velocidade) => {
+  return `${modelo} é um carro ${tamanho} e ${velocidade}`
+}
+
+console.log(carro('Volvo')('Pequeno')('Rápido'))
+// "Volvo é um carro Pequeno e Rápido"
+`````
+
+Observe que `modelo` executa retornando `tamanho` e `tamanho` executa retornando a `velocidade`.
+
+Para executar essa função, chamamos `carro`, e o que seria cada argumento, agora será uma nova execução da função.
+
+Semelhante a um `chain` de funções.
+
+Dessa forma é possível quebrar, usando diferentes variáveis para diferentes entradas de funções.
+
+Poderiamos já deixar definido um modelo de carro pré-estabelecido, alterando apenas as funções seguintes.
+
+````js
+const carro = (modelo) => (tamanho) => (velocidade) => {
+  return `${modelo} é um carro ${tamanho} e ${velocidade}`
+}
+
+const toyota = carro('Toyota')
+
+console.log(toyota('pequeno')('lento'))
+// "Toyota é um carro pequeno e lento"
+console.log(toyota('médio')('rápido'))
+// "Toyota é um carro médio e rápido"
+````
+
+Assim como também poderia fixar uma das funções seguintes deixando apenas a última função para o usuário definir.
+
+
+
+// PAREI AOS 4:40
