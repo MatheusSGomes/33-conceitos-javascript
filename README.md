@@ -3127,6 +3127,96 @@ console.log(toyota('médio')('rápido'))
 
 Assim como também poderia fixar uma das funções seguintes deixando apenas a última função para o usuário definir.
 
+## Compose
 
+É compor uma função usando outras funções como argumento.
 
-// PAREI AOS 4:40
+````js
+function incrementar(x) {
+  return x + 1
+}
+
+function dobrar(x) {
+  return x * 2
+}
+````
+
+Executando sem compose:
+
+````js
+const valor = incrementar(4)
+const resultado = dobrar(valor)
+
+console.log(resultado) // 10
+````
+
+Usando o compose onde uma função é passada como argumento da outra:
+
+````js
+const resultado = dobrar(incrementar(4))
+
+console.log(resultado) // 10
+````
+
+Obs: Uma outra forma de escrever as funções de incrementar e dobrar, o resultado é o mesmo. 
+
+````js
+const incrementar = (x) => x + 1
+const dobrar = (x) => x * 2
+````
+
+## Pipe
+
+É uma outra forma de escrever o `compose` usando uma outra função como intermediária recebendo as funções que devem ser executadas e os argumentos passados a elas.
+
+`Pipe` é cano em inglês, é usado esse nome porque é algo que vai "descendo" como por um cano. No final aparece apenas o resultado esperado.
+
+````js
+function incrementar(x) {
+  return x + 1
+}
+
+function dobrar(x) {
+  return x * 2
+}
+
+function pipe(inc, dob) {
+  return (args) => dob(inc(args))
+}
+````
+
+Para argumentos da função `pipe` passamos as funções incrementar e dobrar. 
+
+No retorno dessa função passamos um valor que será executado.
+
+`````js
+const incrementaEDobra = pipe(incrementar, dobrar)
+
+const resultado = incrementaEDobra(4)
+
+console.log(resultado) // 10
+`````
+
+Uma outra forma mais abreviada de escrever as funções:
+
+````js
+const incrementar = x => x + 1
+const dobrar = x => x * 2
+const pipe = (inc, dob) => (args) => dob(inc(args))
+
+const incrementaEDobra = pipe(incrementar, dobrar)
+const resultado = incrementaEDobra(4)
+console.log(resultado) // 10
+````
+
+Porém retorna o mesmo resultado. 
+
+Uma observação, é que para a primeira função, passamos as funções como argumento, na segunda ela espera um valor.
+
+Poderia usar o `currying`:
+
+````js
+const incrementaEDobra = pipe(incrementar, dobrar)(4)
+console.log(incrementaEDobra) // 10
+````
+
