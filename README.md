@@ -3220,3 +3220,112 @@ const incrementaEDobra = pipe(incrementar, dobrar)(4)
 console.log(incrementaEDobra) // 10
 ````
 
+# Conceito 32 - Clean Code
+
+> Qualquer um consegue escrever código que um computador entende. Bons programadores escrevem código que humanos entendem" - Martin Fowler
+
+O objetivo de criar códigos limpos é fazer um trabalho pensando tanto em você no futuro, quando precisar fazer a manutenção do código, quanto pensar nas pessoas que podem vir a precisar trabalhar no código como equipe de trabalho.
+
+De certa forma, é perder um pouco mais de tempo no começo para que depois você ganhe muito mais tempo. 
+
+Alguns conceitos básicos:
+
+### Variáveis - É importante nomear corretamente. 
+
+Não colocar nomes que não indicam nada:
+
+````js
+let c = 0
+const tempo = 15
+````
+
+Muitas das vezes quando você está escrevendo pela primeira vez, parece óbvio que `c` se refere a algo específico, depois de um tempo sem ler o código você não vai ser lembrar de coisas que era óbvias no passado. 
+
+Outra dica é não abreviar:
+
+````js
+var respAguarINT = 15
+````
+
+Uma forma melhor:
+
+````js
+let chamadasParaAPI = 0
+const tempoDeAguardandoRespostas = 15
+const TEMPO_MAXIMO_DE_RESPOSTA = 10
+````
+
+ ### Funções
+
+Os nomes das funções devem seguir as mesmas dicas das variáveis.
+
+O ideal é que as funções façam apenas uma coisa. Realizar apenas uma atividade.
+
+Um exemplo ruim porque a função faz 2 coisas:
+
+````js
+function criarUsuario(id) {
+  http.post('url' + id).then(dadosUsuario => {
+    this.usuario = dadosUsuario
+  })
+}
+````
+
+Exemplo melhor, onde a função faz apenas uma coisa e fica mais legível:
+
+````js
+async function buscarUsuario(id) {
+  return await http.post('url' + id)tp
+}
+
+this.usuario = buscarUsuario(23)
+````
+
+---
+
+Outra dica em relação a funções é evitar uma lista grande de argumentos. O ideal é a função ter argumentos únicos. 2 argumentos é aceitável porém 3 é considerado ruim.
+
+Exemplo ruim:
+
+````js
+function atualizarUsuario(nome, telefone, endereço, idade, sexo) {
+  this.nome = nome
+  this.telefone = telefone
+  this.endereço = endereço
+  this.idade = idade
+  this.sexo = sexo
+}
+````
+
+Se necessário usar uma função com muitos argumentos, uma solução é passar um objeto com todos os argumentos.
+
+O objeto pode até ser grande, mas a declaração da função será curta. 
+
+````js
+const usuario = {
+  nome: 'Caio',
+  telefone: '(62)8888-9999',
+  endereço: 'Casa',
+  idade: 32,
+  sexo: 'masculino',
+}
+
+function atualizarUsuario(usuario) {}
+````
+
+Outra dica é sempre criar um comentário dizendo o que uma função ou uma variável faz. Comentários de bloco sempre são muito uteis. 
+
+E não esquecer de dizer o que cada parâmetro faz. 
+
+````js
+/*
+	Atualiza usuario a partir dos dados recebidos
+	params usuario dados do usuário
+*/
+
+atualizaUsuario(usuario) 
+````
+
+Nas IDEs, quando colocamos o mouse sobre a função, ele retorna o que a função faz, para que os parâmetros servem.
+
+// 09:50
