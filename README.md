@@ -3328,4 +3328,39 @@ atualizaUsuario(usuario)
 
 Nas IDEs, quando colocamos o mouse sobre a função, ele retorna o que a função faz, para que os parâmetros servem.
 
-// 09:50
+### Objetos
+
+Uma prática recomendada é não deixar o usuário usar as propriedades diretamente. 
+
+Para isso são criados `getters` e `setters` para retornar e alterar propriedades.
+
+Ou seja, tornamos as propriedades privadas para que o usuário não faça alterações, e criamos 
+
+````js
+function criarUsuario(nome) {
+  this.nome = nome;
+  getNome = () => this.nome;
+  setNome = (novoNome) => this.nome = novoNome;
+  
+  return { getNome, setNome }
+}
+
+const novoUsuario = criarUsuario('Matheus')
+
+console.log(novoUsuario.nome) // undefined
+console.log(novoUsuario.getNome()) // "Matheus"
+console.log(novoUsuario.setNome('Henrique')) // "Henrique"
+````
+
+### Classes
+
+O ES6 trouxe uma forma mais legível de construir classes. Não faz mais sentido usar as confusas funções construtoras. 
+
+Criar um `chain` dos métodos para deixar o código menos verboso e melhorar a legibilidade.
+
+Retornar um `this` dos métodos que quero habilitar o `chain`.
+
+
+
+// 12:13
+
