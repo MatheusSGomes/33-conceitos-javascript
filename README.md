@@ -3360,7 +3360,57 @@ Criar um `chain` dos métodos para deixar o código menos verboso e melhorar a l
 
 Retornar um `this` dos métodos que quero habilitar o `chain`.
 
+Para criar um `chain` dos métodos, retornamos todos os métodos. Assim será possível encadea-los.
 
+Nesse exemplo temos uma classe com métodos de opções de texto:
 
-// 12:13
+````js
+class TextOptions {
+  constructor() {
+    this.text = ''
+  }
+  getText = () => this.text
+  setText = (text) => {
+    this.text = text
+    return this
+  }
+  upperCase = () => {
+    this.text = this.text.toUpperCase()
+    return this
+  }
+  lowerCase = () => {
+    this.text = this.text.toLowerCase()
+    return this
+  }
+  invertText = () => {
+    this.text = this.text.split('').reverse().join('')
+    return this
+  }
+}
+````
 
+Então referenciamos a classe e usamos os métodos dela.
+
+````js
+const _textOptions = new TextOptions()
+
+let emanuelInvert = _textOptions.setText('Emanuel').invertText().getText()
+
+console.log(emanuelInvert) // leunamE
+````
+
+Assim como podemos também fazer um `chain` com outros métodos:
+
+````js
+let emanuel = _textOptions.setText('Emanuel').lowerCase().invertText().getText()
+
+console.log(emanuel) // leuname
+````
+
+````js
+let emanuel = _textOptions.setText('Emanuel').upperCase().invertText().getText()
+
+console.log(emanuel) // LEUNAME
+````
+
+Dessa forma podemos usar os métodos em uma sequência e obter o resultado final. Sem o encadeamento teríamos que chamar um método diferente em cada linha para manipular o texto.
